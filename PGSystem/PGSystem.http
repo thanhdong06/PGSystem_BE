@@ -1,0 +1,6 @@
+@PGSystem_HostAddress = http://localhost:5058
+
+GET {{PGSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
