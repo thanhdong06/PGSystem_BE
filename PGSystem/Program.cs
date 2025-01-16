@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using PGSystem_DataAccessLayer.DBContext;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

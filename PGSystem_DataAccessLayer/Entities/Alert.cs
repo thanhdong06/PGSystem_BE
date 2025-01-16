@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace PGSystem_DataAccessLayer.Entities
 {
-    public class Blog
+    public class Alert
     {
-        public int BID { get; set; }
-        public string Title { get; set; }
-        public string? Content { get; set; }
+        public int AlertID { get; set; }
+        public int PID { get; set; }
+        public int Week { get; set; }
+        public string Message { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
-        public string? Type { get; set; }
-        public int AID { get; set; }
-        public Member Member { get; set; }
+        public PregnancyRecord PregnancyRecord { get; set; }
 
     }
 }

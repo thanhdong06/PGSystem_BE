@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PGSystem_Repository\PGSystem_Repository.csproj" />
+  </ItemGroup>
+
 </Project>

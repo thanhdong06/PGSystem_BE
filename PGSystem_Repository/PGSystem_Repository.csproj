@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PGSystem_DataAccessLayer\PGSystem_DataAccessLayer.csproj" />
+  </ItemGroup>
+
 </Project>
