@@ -31,6 +31,18 @@ namespace PGSystem_DataAccessLayer.DBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>().HasData(
+            new User
+            {
+                UID = 1,            
+                Email = "admin@gmail.com",
+                Password = "12345",
+                Phone = "0123456789",
+                Role = "Admin",
+                CreateAt = DateTime.Today,
+                UpdateAt = DateTime.Now,
+            }
+            );
             ConfigureModel(modelBuilder);
         }
 
