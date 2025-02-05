@@ -10,17 +10,17 @@ using PGSystem_DataAccessLayer.Entities;
 
 namespace PGSystem_DataAccessLayer.MappingAndPaging
 {
-    public class AutoMapper : Profile
+    public class AutoMapperProfile : Profile
     {
-        public AutoMapper()
+        public AutoMapperProfile()
         {
             UserMappingProfile();
         }
         private void UserMappingProfile()
         {
             CreateMap<User, LoginRequest>().ReverseMap();
-            CreateMap<User, ResponseUser>().ReverseMap();
-
+            CreateMap<User, LoginGoogleRequest>().ReverseMap();
+            CreateMap<User, ResponseUser>().ReverseMap();            
         }
     }
 }

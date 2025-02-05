@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using PGSystem.Configuration;
 using PGSystem_DataAccessLayer.DBContext;
 using AutoMapper;
+using PGSystem_Repository.Users;
+using PGSystem_Service.Users;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerService();
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddGoogleAuthentication(builder.Configuration);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -23,8 +28,6 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod();
     });
 });
-
-
 
 
 var app = builder.Build();
