@@ -4,6 +4,7 @@ using PGSystem_Repository.Users;
 using PGSystem_Service.Users;
 using PGSystem_DataAccessLayer.MappingAndPaging;
 using AutoMapper;
+using PGSystem_DataAccessLayer.Password;
 
 namespace PGSystem.Configuration
 {
@@ -18,6 +19,7 @@ namespace PGSystem.Configuration
 
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IPasswordService, PasswordService>();
 
             return services;
         }

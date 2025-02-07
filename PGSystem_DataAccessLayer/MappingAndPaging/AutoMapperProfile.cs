@@ -19,6 +19,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         private void UserMappingProfile()
         {
             CreateMap<User, LoginRequest>().ReverseMap();
+            CreateMap<User, RegisterRequest>().ReverseMap();
             CreateMap<User, LoginGoogleRequest>().ReverseMap();
             CreateMap<User, ResponseUser>().ReverseMap();            
         }

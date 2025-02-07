@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PGSystem_DataAccessLayer.DTO.ResponseModel
+namespace PGSystem_DataAccessLayer.DTO.RequestModel
 {
-    public class LoginResponse
+    public class RefreshTokenRequest
     {
-        public string Token { get; set; }
         public string RefreshToken {  get; set; }
-        public ResponseUser User { get; set; }
     }
 }
