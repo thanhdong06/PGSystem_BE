@@ -15,6 +15,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         public AutoMapperProfile()
         {
             UserMappingProfile();
+            MembershipMappingProfile();
         }
         private void UserMappingProfile()
         {
@@ -22,6 +23,11 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CreateMap<User, RegisterRequest>().ReverseMap();
             CreateMap<User, LoginGoogleRequest>().ReverseMap();
             CreateMap<User, ResponseUser>().ReverseMap();            
+        }
+
+        private void MembershipMappingProfile()
+        {
+            CreateMap<Membership, ResponseMembership>().ReverseMap();
         }
     }
 }

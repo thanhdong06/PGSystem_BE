@@ -49,7 +49,7 @@ namespace PGSystem_Repository.Users
         }
         public async Task<string> Register(RegisterRequest request)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email && u.Phone == request.Phone);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email || u.Phone == request.Phone);
             if (existingUser != null)
             {
                 throw new InvalidDataException("Email or Phone already exists");
