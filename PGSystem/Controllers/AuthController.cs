@@ -14,7 +14,9 @@ using System.Text;
 
 namespace PGSystem.Controllers
 {
-    public class AuthController : Controller
+    [Route("api/Authentication")]
+    [ApiController]
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
 

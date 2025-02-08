@@ -16,6 +16,5 @@ namespace PGSystem_DataAccessLayer.Entities
         public string? Type { get; set; }
         public int AID { get; set; }
         public Member Member { get; set; }
-
     }
 }
