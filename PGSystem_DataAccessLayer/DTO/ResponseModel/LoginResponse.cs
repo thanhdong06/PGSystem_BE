@@ -10,6 +10,6 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
     {
         public string Token { get; set; }
         public string RefreshToken {  get; set; }
-        public ResponseUser User { get; set; }
+        public UserResponse User { get; set; }
     }
 }

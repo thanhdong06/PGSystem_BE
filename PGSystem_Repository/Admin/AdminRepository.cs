@@ -25,5 +25,19 @@ namespace PGSystem_Repository.Admin
         {
             return await _context.Memberships.ToListAsync();
         }
+        public async Task<SystemReportResponse> GetSystemReportAsync()
+        {
+            var totalUsers = await _context.Users.CountAsync();
+            var totalAdmins = await _context.Users.CountAsync(u => u.Role == "Admin");
+            var totalMembers = await _context.Users.CountAsync(u => u.Role == "Member");
+
+            return new SystemReportResponse
+            {
+                TotalUsers = totalUsers,
+                TotalAdmins = totalAdmins,
+                TotalMembers = totalMembers,
+                ReportDate = DateTime.UtcNow
+            };
+        }
     }
 }

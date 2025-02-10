@@ -22,12 +22,12 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CreateMap<User, LoginRequest>().ReverseMap();
             CreateMap<User, RegisterRequest>().ReverseMap();
             CreateMap<User, LoginGoogleRequest>().ReverseMap();
-            CreateMap<User, ResponseUser>().ReverseMap();            
+            CreateMap<User, UserResponse>().ReverseMap();            
         }
 
         private void MembershipMappingProfile()
         {
-            CreateMap<Membership, ResponseMembership>().ReverseMap();
+            CreateMap<Membership, MembershipResponse>().ReverseMap();
         }
     }
 }

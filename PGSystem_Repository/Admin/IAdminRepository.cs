@@ -12,5 +12,7 @@ namespace PGSystem_Repository.Admin
     {
         Task<List<User>> GetAllUsersAsync();
         Task<List<Membership>> GetAllMembershipsAsync();
+        Task<SystemReportResponse> GetSystemReportAsync();
+
     }
 }
