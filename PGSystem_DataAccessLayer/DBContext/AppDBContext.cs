@@ -94,7 +94,7 @@ namespace PGSystem_DataAccessLayer.DBContext
             modelBuilder.Entity<GrowthRecord>()
                 .HasOne(g => g.PregnancyRecord)
                 .WithMany(p => p.GrowthRecords)
-                .HasForeignKey(g => g.PID);
+                .HasForeignKey(g => g.PID).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<GrowthRecord>()
                 .Property(g => g.Height)
                 .HasColumnType("decimal(18, 4)");
