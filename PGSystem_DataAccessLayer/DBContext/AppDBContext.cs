@@ -50,7 +50,7 @@ namespace PGSystem_DataAccessLayer.DBContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=LAPTOP-NLTHM945\\DIVAORAM;uid=sa;pwd=12345;Database=SWP391PGSystem;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-EMS4P1Q\\SQLEXPRESS;uid=sa;pwd=12345;Database=SWP391PGSystem;TrustServerCertificate=True;");
             }
         }
         private void ConfigureModel(ModelBuilder modelBuilder)
