@@ -11,8 +11,8 @@ namespace PGSystem_DataAccessLayer.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PID { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime DueDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly DueDate { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public int MemberMemberID { get; set; }

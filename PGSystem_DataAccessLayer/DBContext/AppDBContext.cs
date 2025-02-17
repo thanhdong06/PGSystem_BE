@@ -142,6 +142,17 @@ namespace PGSystem_DataAccessLayer.DBContext
             // Configure PregnancyRecord
             modelBuilder.Entity<PregnancyRecord>()
                 .HasKey(p => p.PID);
+            modelBuilder.Entity<PregnancyRecord>()
+                .Property(p => p.StartDate)
+                .HasConversion(
+                    v => v.ToDateTime(TimeOnly.MinValue),
+                    v => DateOnly.FromDateTime(v));
+            modelBuilder.Entity<PregnancyRecord>()
+                .Property(p => p.DueDate)
+                .HasConversion(
+                    v => v.ToDateTime(TimeOnly.MinValue),
+                    v => DateOnly.FromDateTime(v)
+                );
 
             // Configure R-Status
             modelBuilder.Entity<RStatus>()
