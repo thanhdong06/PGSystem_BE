@@ -17,6 +17,12 @@ namespace PGSystem_Repository.GrowthRecords
         {
             _context = context;
         }
+        public async Task AddAsync(GrowthRecord gr)
+        {
+            _context.GrowthRecords.Add(gr);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<GrowthRecord> GetGrowthRecordByPidAsync(int pid, int week)
         {
             return await _context.GrowthRecords.FirstOrDefaultAsync(gr => gr.PID == pid && gr.Week == week);
