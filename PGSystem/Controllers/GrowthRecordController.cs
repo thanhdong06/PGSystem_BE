@@ -18,17 +18,23 @@ namespace PGSystem.Controllers
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> UpdateGrowthRecord([FromBody] GrowthRecordRequest request)
+        public async Task<ActionResult<JsonResponse<string>>> UpdateGrowthRecord([FromBody] GrowthRecordRequest request)
         {
-            if (request == null)
-            {
-                return BadRequest(new JsonResponse<string>(null, 400, "Invalid request data"));
-            }
             try
             {
+                if (request == null)
+                {
+                    return BadRequest(new JsonResponse<string>(null, 400, "Invalid request data"));
+                }
+
                 var updatedRecord = await _growthRecordService.UpdateGrowthRecordAsync(request);
 
-                return Ok(new JsonResponse<GrowthRecordResponse>(updatedRecord, 200, "Growth record updated successfully"));
+                if (updatedRecord == null)
+                {
+                    return NotFound(new JsonResponse<string>(null, 404, "Growth record not found"));
+                }
+
+                return Ok(new JsonResponse<string>(null, 200, "Growth record updated successfully"));
             }
             catch (KeyNotFoundException ex)
             {
