@@ -36,18 +36,24 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<List<UserResponse>>(new List<UserResponse>(), 500, "An error occurred while retrieving users"));
             }
         }
-
-
         [HttpGet("Memberships")]
-        public async Task<IActionResult> GetAllMembership()
+        public async Task<ActionResult<JsonResponse<List<MembershipResponse>>>> GetAllMembership()
         {
-            var memberships = await _adminService.GetResponseMembershipsAsync();
-
-            if (memberships == null || memberships.Count == 0)
+            try
             {
-                return NotFound(new JsonResponse<List<MembershipResponse>>(new List<MembershipResponse>(), StatusCodes.Status404NotFound,"No membership found"));
+                var memberships = await _adminService.GetResponseMembershipsAsync();
+
+                if (memberships == null || memberships.Count == 0)
+                {
+                    return NotFound(new JsonResponse<List<MembershipResponse>>(new List<MembershipResponse>(), 404, "No membership found"));
+                }
+
+                return Ok(new JsonResponse<List<MembershipResponse>>(memberships, 200, "Membership list successfully"));
             }
-            return Ok(new JsonResponse<List<MembershipResponse>>(memberships, StatusCodes.Status200OK,"Membership list retrieved successfully"));
+            catch (Exception ex)
+            {
+                return StatusCode(500, new JsonResponse<List<MembershipResponse>>(new List<MembershipResponse>(), 500, "An error occurred while retrieving memberships"));
+            }
         }
 
         [HttpGet("Reports")]
