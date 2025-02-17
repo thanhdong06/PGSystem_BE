@@ -36,6 +36,7 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<List<UserResponse>>(new List<UserResponse>(), 500, "An error occurred while retrieving users"));
             }
         }
+
         [HttpGet("Memberships")]
         public async Task<ActionResult<JsonResponse<List<MembershipResponse>>>> GetAllMembership()
         {
@@ -57,10 +58,23 @@ namespace PGSystem.Controllers
         }
 
         [HttpGet("Reports")]
-        public async Task<IActionResult> GetSystemReport()
+        public async Task<ActionResult<JsonResponse<SystemReportResponse>>> GetSystemReport()
         {
-            var report = await _adminService.GetSystemReportAsync();
-            return Ok(new JsonResponse<SystemReportResponse>(report, 200, "System report retrieved successfully"));
+            try
+            {
+                var report = await _adminService.GetSystemReportAsync();
+
+                if (report == null)
+                {
+                    return NotFound(new JsonResponse<SystemReportResponse>(null, 404, "System report not found"));
+                }
+
+                return Ok(new JsonResponse<SystemReportResponse>(report, 200, "System report retrieved successfully"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new JsonResponse<SystemReportResponse>(null, 500, "An error occurred while retrieving the system report"));
+            }
         }
     }
 }
