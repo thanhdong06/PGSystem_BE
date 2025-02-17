@@ -18,16 +18,25 @@ namespace PGSystem.Controllers
         }
 
         [HttpGet("Users")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<ActionResult<JsonResponse<List<UserResponse>>>> GetAllUsers()
         {
-            var users = await _adminService.GetAllUsersAsync();
-
-            if (users == null || users.Count == 0)
+            try
             {
-                return NotFound(new JsonResponse<List<UserResponse>>(new List<UserResponse>(), StatusCodes.Status404NotFound,"No users found"));
+                var users = await _adminService.GetAllUsersAsync();
+
+                if (users == null || users.Count == 0)
+                {
+                    return NotFound(new JsonResponse<List<UserResponse>>(new List<UserResponse>(), 404, "No users found"));
+                }
+
+                return Ok(new JsonResponse<List<UserResponse>>(users, 200, "User list successfully"));
             }
-            return Ok(new JsonResponse<List<UserResponse>>(users, StatusCodes.Status200OK,"User list retrieved successfully"));
+            catch (Exception ex)
+            {
+                return StatusCode(500, new JsonResponse<List<UserResponse>>(new List<UserResponse>(), 500, "An error occurred while retrieving users"));
+            }
         }
+
 
         [HttpGet("Memberships")]
         public async Task<IActionResult> GetAllMembership()
