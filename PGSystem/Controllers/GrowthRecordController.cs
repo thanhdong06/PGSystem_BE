@@ -102,6 +102,5 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the growth record"));
             }
         }
-
     }
 }

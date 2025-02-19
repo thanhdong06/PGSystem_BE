@@ -15,5 +15,6 @@ namespace PGSystem_Service.GrowthRecords
         Task<List<GrowthRecordResponse>> ListGrowthRecordsAsync(int pid);
         Task<GrowthRecordResponse?> GetGrowthRecordByGIDAsync(int gid);
         Task<bool> DeleteGrowthRecordAsync(int id);
+        Task<List<GrowthRecordResponse>> GetGrowthChartAsync(int memberId);
     }
 }

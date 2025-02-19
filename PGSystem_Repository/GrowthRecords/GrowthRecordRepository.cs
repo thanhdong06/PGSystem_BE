@@ -56,5 +56,12 @@ namespace PGSystem_Repository.GrowthRecords
 
             return true;
         }
+        public async Task<List<GrowthRecord>> GetGrowthRecordsForChart(int memberId)
+        {
+            return await _context.GrowthRecords
+                .Where(gr => gr.PregnancyRecord.MemberMemberID == memberId && !gr.IsDeleted)
+                .OrderBy(gr => gr.Week)
+                .ToListAsync();
+        }
     }
 }
