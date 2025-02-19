@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PGSystem_DataAccessLayer.DBContext;
 
@@ -11,9 +12,11 @@ using PGSystem_DataAccessLayer.DBContext;
 namespace PGSystem_DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250217090044_UpdateDateOnlyForPregnancyRecord")]
+    partial class UpdateDateOnlyForPregnancyRecord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,9 +146,6 @@ namespace PGSystem_DataAccessLayer.Migrations
 
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(18, 4)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<int>("PID")
                         .HasColumnType("int");
@@ -372,12 +372,12 @@ namespace PGSystem_DataAccessLayer.Migrations
                         new
                         {
                             UID = 1,
-                            CreateAt = new DateTime(2025, 2, 19, 0, 0, 0, 0, DateTimeKind.Local),
+                            CreateAt = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Local),
                             Email = "admin@gmail.com",
                             Password = "12345",
                             Phone = "0123456789",
                             Role = "Admin",
-                            UpdateAt = new DateTime(2025, 2, 19, 15, 47, 40, 138, DateTimeKind.Local).AddTicks(7148)
+                            UpdateAt = new DateTime(2025, 2, 17, 16, 0, 43, 664, DateTimeKind.Local).AddTicks(4831)
                         });
                 });
 

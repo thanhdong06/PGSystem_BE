@@ -50,7 +50,7 @@ namespace PGSystem_DataAccessLayer.DBContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=LAPTOP-NLTHM945\\DIVAORAM;uid=sa;pwd=12345;Database=SWP391PGSystem;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-EMS4P1Q\\SQLEXPRESS;uid=sa;pwd=12345;Database=SWP391PGSystem;TrustServerCertificate=True;");
             }
         }
         private void ConfigureModel(ModelBuilder modelBuilder)
@@ -94,7 +94,7 @@ namespace PGSystem_DataAccessLayer.DBContext
             modelBuilder.Entity<GrowthRecord>()
                 .HasOne(g => g.PregnancyRecord)
                 .WithMany(p => p.GrowthRecords)
-                .HasForeignKey(g => g.PID);
+                .HasForeignKey(g => g.PID).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<GrowthRecord>()
                 .Property(g => g.Height)
                 .HasColumnType("decimal(18, 4)");
@@ -142,6 +142,17 @@ namespace PGSystem_DataAccessLayer.DBContext
             // Configure PregnancyRecord
             modelBuilder.Entity<PregnancyRecord>()
                 .HasKey(p => p.PID);
+            modelBuilder.Entity<PregnancyRecord>()
+                .Property(p => p.StartDate)
+                .HasConversion(
+                    v => v.ToDateTime(TimeOnly.MinValue),
+                    v => DateOnly.FromDateTime(v));
+            modelBuilder.Entity<PregnancyRecord>()
+                .Property(p => p.DueDate)
+                .HasConversion(
+                    v => v.ToDateTime(TimeOnly.MinValue),
+                    v => DateOnly.FromDateTime(v)
+                );
 
             // Configure R-Status
             modelBuilder.Entity<RStatus>()

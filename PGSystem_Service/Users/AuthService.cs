@@ -70,7 +70,7 @@ namespace PGSystem_Service.Users
             var accessToken = CreateToken(user, 30);  
             var refreshToken = CreateToken(user, 7 * 24 * 60);  
 
-            var responseUser = new ResponseUser
+            var responseUser = new UserResponse
             {
                 Email = user.Email,
                 Phone = user.Phone,               
@@ -106,11 +106,13 @@ namespace PGSystem_Service.Users
                 }
                 var userId = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                 var phone = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
                 var newAccessToken = CreateToken(new User
                 {
                     UID = int.Parse(userId),
-                    Phone = phone
+                    Phone = phone,
+                    Role = role
                 }, 30); // Access Token 30 phút
 
                 return newAccessToken;
@@ -133,6 +135,7 @@ namespace PGSystem_Service.Users
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UID.ToString()),
                 new Claim(ClaimTypes.Name, user.Phone.ToString()),
+                new Claim(ClaimTypes.Role, user.Role),
                 new Claim("tokenType", "access")
             };
 

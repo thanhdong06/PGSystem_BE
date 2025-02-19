@@ -18,28 +18,63 @@ namespace PGSystem.Controllers
         }
 
         [HttpGet("Users")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<ActionResult<JsonResponse<List<UserResponse>>>> GetAllUsers()
         {
-            var users = await _adminService.GetAllUsersAsync();
-
-            if (users == null || users.Count == 0)
+            try
             {
-                return NotFound(new JsonResponse<List<ResponseUser>>(new List<ResponseUser>(), StatusCodes.Status404NotFound,"No users found"));
+                var users = await _adminService.GetAllUsersAsync();
+
+                if (users == null || users.Count == 0)
+                {
+                    return NotFound(new JsonResponse<List<UserResponse>>(new List<UserResponse>(), 404, "No users found"));
+                }
+
+                return Ok(new JsonResponse<List<UserResponse>>(users, 200, "User list successfully"));
             }
-            return Ok(new JsonResponse<List<ResponseUser>>(users, StatusCodes.Status200OK,"User list retrieved successfully"));
+            catch (Exception ex)
+            {
+                return StatusCode(500, new JsonResponse<List<UserResponse>>(new List<UserResponse>(), 500, "An error occurred while retrieving users"));
+            }
         }
 
         [HttpGet("Memberships")]
-        public async Task<IActionResult> GetAllMembership()
+        public async Task<ActionResult<JsonResponse<List<MembershipResponse>>>> GetAllMembership()
         {
-            var memberships = await _adminService.GetResponseMembershipsAsync();
-
-            if (memberships == null || memberships.Count == 0)
+            try
             {
-                return NotFound(new JsonResponse<List<ResponseMembership>>(new List<ResponseMembership>(), StatusCodes.Status404NotFound,"No membership found"));
+                var memberships = await _adminService.GetResponseMembershipsAsync();
+
+                if (memberships == null || memberships.Count == 0)
+                {
+                    return NotFound(new JsonResponse<List<MembershipResponse>>(new List<MembershipResponse>(), 404, "No membership found"));
+                }
+
+                return Ok(new JsonResponse<List<MembershipResponse>>(memberships, 200, "Membership list successfully"));
             }
-            return Ok(new JsonResponse<List<ResponseMembership>>(memberships, StatusCodes.Status200OK,"Membership list retrieved successfully"));
+            catch (Exception ex)
+            {
+                return StatusCode(500, new JsonResponse<List<MembershipResponse>>(new List<MembershipResponse>(), 500, "An error occurred while retrieving memberships"));
+            }
         }
 
+        [HttpGet("Reports")]
+        public async Task<ActionResult<JsonResponse<SystemReportResponse>>> GetSystemReport()
+        {
+            try
+            {
+                var report = await _adminService.GetSystemReportAsync();
+
+                if (report == null)
+                {
+                    return NotFound(new JsonResponse<SystemReportResponse>(null, 404, "System report not found"));
+                }
+
+                return Ok(new JsonResponse<SystemReportResponse>(report, 200, "System report retrieved successfully"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new JsonResponse<SystemReportResponse>(null, 500, "An error occurred while retrieving the system report"));
+            }
+        }
     }
 }

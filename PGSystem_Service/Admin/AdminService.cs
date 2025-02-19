@@ -17,11 +17,11 @@ namespace PGSystem_Service.Admin
             _adminRepository = adminRepository;
         }
 
-        public async Task<List<ResponseUser>> GetAllUsersAsync()
+        public async Task<List<UserResponse>> GetAllUsersAsync()
         {
             var users = await _adminRepository.GetAllUsersAsync();
 
-            return users.Select(u => new ResponseUser
+            return users.Select(u => new UserResponse
             {
                 UID = u.UID,
                 Email = u.Email,
@@ -29,16 +29,20 @@ namespace PGSystem_Service.Admin
                 Role = u.Role
             }).ToList();
         }
-        public async Task<List<ResponseMembership>> GetResponseMembershipsAsync()
+        public async Task<List<MembershipResponse>> GetResponseMembershipsAsync()
         {
             var memberships = await _adminRepository.GetAllMembershipsAsync();
 
-            return memberships.Select(u => new ResponseMembership
+            return memberships.Select(u => new MembershipResponse
             {
                 Name = u.Name,
                 Description = u.Description,
                 Price = u.Price
             }).ToList();
+        }
+        public async Task<SystemReportResponse> GetSystemReportAsync()
+        {
+            return await _adminRepository.GetSystemReportAsync();
         }
     }
 }
