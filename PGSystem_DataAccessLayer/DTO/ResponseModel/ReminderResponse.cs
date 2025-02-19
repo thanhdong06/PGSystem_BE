@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PGSystem_DataAccessLayer.DTO.ResponseModel
 {
-    public class ResponseMembership
+    public class ReminderResponse
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        public string Title { get; set; }
+        public string? Description { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }

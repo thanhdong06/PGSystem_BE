@@ -19,5 +19,6 @@ namespace PGSystem_DataAccessLayer.Entities
 
         public RStatus RStatus { get; set; }
         public Member Member { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

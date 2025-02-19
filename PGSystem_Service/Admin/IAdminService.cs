@@ -9,7 +9,9 @@ namespace PGSystem_Service.Admin
 {
     public interface IAdminService
     {
-        Task<List<ResponseUser>> GetAllUsersAsync();
-        Task<List<ResponseMembership>> GetResponseMembershipsAsync();
+        Task<List<UserResponse>> GetAllUsersAsync();
+        Task<List<MembershipResponse>> GetResponseMembershipsAsync();
+        Task<SystemReportResponse> GetSystemReportAsync();
+
     }
 }

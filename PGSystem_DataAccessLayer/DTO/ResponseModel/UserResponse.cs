@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PGSystem_DataAccessLayer.DTO.ResponseModel
 {
-    public class ResponseUser
+    public class UserResponse
     {
         public int UID { get; set; }
         public string Email { get; set; }
