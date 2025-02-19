@@ -10,7 +10,10 @@ namespace PGSystem_Repository.GrowthRecords
     public interface IGrowthRecordRepository
     {
         Task AddAsync(GrowthRecord gr);
-        Task<GrowthRecord> GetGrowthRecordByPidAsync(int pid, int week);
+        Task<GrowthRecord?> GetGrowthRecordByGID(int id);
+        Task<List<GrowthRecord>> ListGrowthRecordsByPID(int pid);
+        Task<GrowthRecord> GetGrowthRecordByPidAndWeek(int pid, int week);
         Task<GrowthRecord> UpdateGrowthRecordAsync(GrowthRecord growthRecord);
+        Task<bool> DeleteGrowthRecord(int id);
     }
 }

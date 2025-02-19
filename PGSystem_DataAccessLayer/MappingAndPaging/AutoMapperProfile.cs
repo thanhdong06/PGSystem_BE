@@ -35,6 +35,9 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         private void GrowthRecordMappingProfile()
         {
             CreateMap<GrowthRecord, GrowthRecordResponse>().ReverseMap();
+            CreateMap<GrowthRecordRequest, GrowthRecord>()
+                       .ForMember(dest => dest.GID, opt => opt.Ignore())
+                       .ForMember(dest => dest.PregnancyRecord, opt => opt.Ignore());        
         }
         private void PregnancyRecordMappingProfile()
         {

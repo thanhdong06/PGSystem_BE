@@ -26,7 +26,7 @@ namespace PGSystem_Service.GrowthRecords
         }
         public async Task<GrowthRecordResponse> UpdateGrowthRecordAsync(GrowthRecordRequest request)
         {
-            var existingRecord = await _growthRecordRepository.GetGrowthRecordByPidAsync(request.PID, request.Week);
+            var existingRecord = await _growthRecordRepository.GetGrowthRecordByPidAndWeek(request.PID, request.Week);
 
             if (existingRecord == null)
             {
@@ -41,5 +41,20 @@ namespace PGSystem_Service.GrowthRecords
 
             return _mapper.Map<GrowthRecordResponse>(updatedRecord);
         }
+        public async Task<List<GrowthRecordResponse>> ListGrowthRecordsAsync(int pid)
+        {
+            var growthRecords = await _growthRecordRepository.ListGrowthRecordsByPID(pid);
+            return _mapper.Map<List<GrowthRecordResponse>>(growthRecords);
+        }
+        public async Task<GrowthRecordResponse?> GetGrowthRecordByGIDAsync(int gid)
+        {
+            var growthRecord = await _growthRecordRepository.GetGrowthRecordByGID(gid);
+            return _mapper.Map<GrowthRecordResponse>(growthRecord);
+        }
+        public async Task<bool> DeleteGrowthRecordAsync(int id)
+        {
+            return await _growthRecordRepository.DeleteGrowthRecord(id);
+        }
+
     }
 }

@@ -16,6 +16,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public decimal Weight { get; set; }
         public decimal Height { get; set; }
         public DateTime UpdateAt { get; set; }
+        public bool IsDeleted { get; set; }
         public PregnancyRecord PregnancyRecord { get; set; }
     }
 }
