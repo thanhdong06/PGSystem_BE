@@ -35,6 +35,9 @@ namespace PGSystem_Service.Reminders
         public async Task<ReminderResponse> CreateReminderAsync(ReminderRequest request)
         {
             var entity = _mapper.Map<Reminder>(request);
+            entity.Title = request.Title;   
+            entity.Description = request.Description;
+            entity.DateTime = request.DateTime;
             entity.CreateAt = entity.UpdateAt = DateTime.UtcNow;
 
             var createdReminder = await _reminderRepository.CreateRemindersAsync(entity);
@@ -44,11 +47,11 @@ namespace PGSystem_Service.Reminders
 
         public async Task<ReminderResponse> UpdateRemindersAsync(ReminderRequest request)
         {
-            var existingReminder = await _reminderRepository.GetReminderByRidAndTitle(request.RID, request.Title);
+            var existingReminder = await _reminderRepository.GetReminderByMemberID(request.MemberID);
 
             if (existingReminder== null)
             {
-                throw new KeyNotFoundException($"No reminder found for PID {request.RID} have {request.Title}.");
+                throw new KeyNotFoundException($"No reminder found for MemberId {request.MemberID}.");
             }
 
             existingReminder.Description = request.Description;

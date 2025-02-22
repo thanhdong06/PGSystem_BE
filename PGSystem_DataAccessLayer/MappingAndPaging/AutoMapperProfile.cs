@@ -18,6 +18,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             MembershipMappingProfile();
             GrowthRecordMappingProfile();
             PregnancyRecordMappingProfile();
+            ReminderMappingProfile();
         }
         private void UserMappingProfile()
         {
@@ -48,6 +49,11 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CreateMap<PregnancyRecord, PregnancyRecordResponse>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
                 .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.DueDate));
+        }
+        private void ReminderMappingProfile()
+        {
+            CreateMap<ReminderRequest, Reminder>();
+            CreateMap<Reminder, ReminderResponse>();
         }
     }
 }

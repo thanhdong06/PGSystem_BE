@@ -31,9 +31,9 @@ namespace PGSystem_Repository.Reminders
             return entity;
         }
 
-        public async Task<Reminder> GetReminderByRidAndTitle(int rid, string title)
+        public async Task<Reminder> GetReminderByMemberID(int mid)
         {
-            return await _context.Reminders.FirstOrDefaultAsync(re => re.RID == rid && re.Title.Equals(title) && !re.IsDeleted);
+            return await _context.Reminders.FirstOrDefaultAsync(re => re.MemberID == mid && !re.IsDeleted);
         }
         public async Task<Reminder> UpdateRemindersAsync(Reminder reminder)
         {

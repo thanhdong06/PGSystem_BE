@@ -11,6 +11,8 @@ using PGSystem_Repository.GrowthRecords;
 using PGSystem_Service.GrowthRecords;
 using PGSystem_Repository.PregnancyRecords;
 using PGSystem_Service.PregnancyRecords;
+using PGSystem_Repository.Reminders;
+using PGSystem_Service.Reminders;
 
 namespace PGSystem.Configuration
 {
@@ -32,6 +34,8 @@ namespace PGSystem.Configuration
             services.AddScoped<IGrowthRecordService, GrowthRecordService>();
             services.AddScoped<IPregnancyRecordRepository, PregnancyRecordRepository>();
             services.AddScoped<IPregnancyRecordService, PregnancyRecordService>();
+            services.AddScoped<IReminderRepository,ReminderRepository >();
+            services.AddScoped<IReminderService,ReminderService>();
 
             return services;
         }
