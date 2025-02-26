@@ -37,6 +37,7 @@ namespace PGSystem.Configuration
             services.AddScoped<IReminderRepository, ReminderRepository>();
             services.AddScoped<IReminderService, ReminderService>();
 
+
             return services;
         }
     }

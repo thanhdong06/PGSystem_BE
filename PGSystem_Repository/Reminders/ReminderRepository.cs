@@ -24,5 +24,38 @@ namespace PGSystem_Repository.Reminders
                 return await _context.Reminders.ToListAsync();
             }
         }
+        public async Task<Reminder> CreateRemindersAsync(Reminder entity)
+        {
+            _context.Reminders.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<Reminder> GetReminderByMemberID(int mid)
+        {
+            return await _context.Reminders.FirstOrDefaultAsync(re => re.MemberID == mid && !re.IsDeleted);
+        }
+        public async Task<Reminder> UpdateRemindersAsync(Reminder reminder)
+        {
+            _context.Reminders.Update(reminder);
+            await _context.SaveChangesAsync();
+            return reminder;
+        }
+        public async Task<bool> DeleteReminders(int rid)
+        {
+            var reminder = await _context.Reminders.FirstOrDefaultAsync(re => re.RID == rid && !re.IsDeleted);
+
+            if (reminder == null)
+            {
+                return false;
+            }
+            reminder.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
     }
+
+
 }
