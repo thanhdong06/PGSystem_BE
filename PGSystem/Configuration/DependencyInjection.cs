@@ -34,8 +34,9 @@ namespace PGSystem.Configuration
             services.AddScoped<IGrowthRecordService, GrowthRecordService>();
             services.AddScoped<IPregnancyRecordRepository, PregnancyRecordRepository>();
             services.AddScoped<IPregnancyRecordService, PregnancyRecordService>();
-            services.AddScoped<IReminderRepository,ReminderRepository >();
-            services.AddScoped<IReminderService,ReminderService>();
+            services.AddScoped<IReminderRepository, ReminderRepository>();
+            services.AddScoped<IReminderService, ReminderService>();
+
 
             return services;
         }

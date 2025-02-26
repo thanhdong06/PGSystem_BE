@@ -15,5 +15,6 @@ namespace PGSystem_Repository.GrowthRecords
         Task<GrowthRecord> GetGrowthRecordByPidAndWeek(int pid, int week);
         Task<GrowthRecord> UpdateGrowthRecordAsync(GrowthRecord growthRecord);
         Task<bool> DeleteGrowthRecord(int id);
+        Task<List<GrowthRecord>> GetGrowthRecordsForChart(int memberId);
     }
 }

@@ -55,6 +55,10 @@ namespace PGSystem_Service.GrowthRecords
         {
             return await _growthRecordRepository.DeleteGrowthRecord(id);
         }
-
+        public async Task<List<GrowthRecordResponse>> GetGrowthChartAsync(int memberId)
+        {
+            var growthRecords = await _growthRecordRepository.GetGrowthRecordsForChart(memberId);
+            return _mapper.Map<List<GrowthRecordResponse>>(growthRecords);
+        }      
     }
 }
