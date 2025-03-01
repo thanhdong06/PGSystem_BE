@@ -75,6 +75,7 @@ namespace PGSystem_Service.Users
                 Email = user.Email,
                 Phone = user.Phone,
                 Role = user.Role,
+                FullName = user.FullName,
             };
 
             return new LoginResponse

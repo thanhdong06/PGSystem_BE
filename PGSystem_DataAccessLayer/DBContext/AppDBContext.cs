@@ -40,6 +40,7 @@ namespace PGSystem_DataAccessLayer.DBContext
                 UID = 1,            
                 Email = "admin@gmail.com",
                 Password = "12345",
+                FullName = "Admin dep trai",
                 Phone = "0123456789",
                 Role = "Admin",
                 CreateAt = DateTime.Today,
