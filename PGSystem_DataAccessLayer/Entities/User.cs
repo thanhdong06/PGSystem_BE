@@ -16,6 +16,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public string Phone { get; set; }
+        public string FullName {  get; set; }
         public string Role { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }

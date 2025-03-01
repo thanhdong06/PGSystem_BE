@@ -10,7 +10,6 @@ namespace PGSystem_DataAccessLayer.Entities
     {
         public int MemberID { get; set; }
         public int MembershipID { get; set; } 
-        public string MemberName { get; set; }
         public Membership Membership { get; set; }
         public ICollection<Blog> Blogs { get; set; }
         public ICollection<Comment> Comments { get; set; }

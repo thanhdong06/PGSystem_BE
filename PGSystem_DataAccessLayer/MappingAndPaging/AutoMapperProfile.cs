@@ -44,10 +44,8 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         }
         private void PregnancyRecordMappingProfile()
         {
-            CreateMap<PregnancyRecordRequest, PregnancyRecord>()
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.StartDate.ToDateTime(TimeOnly.MinValue))))
-                .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.DueDate.ToDateTime(TimeOnly.MinValue))));
-
+            CreateMap<PregnancyRecordRequest, PregnancyRecord>();
+               
             CreateMap<PregnancyRecord, PregnancyRecordResponse>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
                 .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.DueDate));

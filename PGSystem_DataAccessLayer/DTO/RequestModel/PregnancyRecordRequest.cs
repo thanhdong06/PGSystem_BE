@@ -8,8 +8,6 @@ namespace PGSystem_DataAccessLayer.DTO.RequestModel
 {
     public class PregnancyRecordRequest
     {
-        public DateOnly StartDate { get; set; }
-        public DateOnly DueDate { get; set; }
         public int MemberMemberID { get; set; }
     }
 }

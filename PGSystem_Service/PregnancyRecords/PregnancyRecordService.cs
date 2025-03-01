@@ -27,7 +27,11 @@ namespace PGSystem_Service.PregnancyRecords
         public async Task<PregnancyRecordResponse> CreatePregnancyRecordAsync(PregnancyRecordRequest request)
         {
             var entity = _mapper.Map<PregnancyRecord>(request);
-            entity.CreateAt = entity.UpdateAt = DateTime.UtcNow;
+
+            entity.StartDate = DateOnly.FromDateTime(DateTime.Now);
+            entity.DueDate = entity.StartDate.AddDays(280);
+
+            entity.CreateAt = entity.UpdateAt = DateTime.Now;
 
             var createdRecord = await _pregnancyRepository.AddAsync(entity);
             await CreateGrowthRecordsForPregnancy(createdRecord.PID);
