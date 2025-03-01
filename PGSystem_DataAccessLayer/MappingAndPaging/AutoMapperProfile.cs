@@ -33,6 +33,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         private void MembershipMappingProfile()
         {
             CreateMap<Membership, MembershipResponse>().ReverseMap();
+            CreateMap<Membership, MembershipsRequest>().ReverseMap();
         }
 
         private void GrowthRecordMappingProfile()

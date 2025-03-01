@@ -13,6 +13,12 @@ namespace PGSystem_Repository.Admin
         Task<List<User>> GetAllUsersAsync();
         Task<List<Membership>> GetAllMembershipsAsync();
         Task<SystemReportResponse> GetSystemReportAsync();
+        Task<Membership> AddAsync(Membership membership);
+        Task<bool> ExistsByNameAsync(string name);
+        Task<List<Membership>> GetAllAsync();
+        Task<bool> DeleteMembership(int MID);
+        Task<Membership> GetByIdAsync(int id);
+        Task UpdateAsync(Membership membership);
 
     }
 }
