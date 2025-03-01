@@ -35,7 +35,7 @@ namespace PGSystem_Service.Reminders
         public async Task<ReminderResponse> CreateReminderAsync(ReminderRequest request)
         {
             var entity = _mapper.Map<Reminder>(request);
-            entity.Title = request.Title;   
+            entity.Title = request.Title;
             entity.Description = request.Description;
             entity.DateTime = request.DateTime;
             entity.CreateAt = entity.UpdateAt = DateTime.UtcNow;
@@ -45,27 +45,40 @@ namespace PGSystem_Service.Reminders
             return _mapper.Map<ReminderResponse>(createdReminder);
         }
 
-        public async Task<ReminderResponse> UpdateRemindersAsync(ReminderRequest request)
+        public async Task<ReminderResponse?> UpdateReminderAsync(int rid, ReminderRequest request)
         {
-            var existingReminder = await _reminderRepository.GetReminderByMemberID(request.MemberID);
-
-            if (existingReminder== null)
+            var reminder = await _reminderRepository.GetReminderByRID(rid);
+            if (reminder == null)
             {
-                throw new KeyNotFoundException($"No reminder found for MemberId {request.MemberID}.");
+                return null;
             }
 
-            existingReminder.Description = request.Description;
-            existingReminder.DateTime = request.DateTime;
-            existingReminder.UpdateAt = DateTime.Now;
+            // Cập nhật thông tin
+            reminder.Title = request.Title;
+            reminder.Description = request.Description;
+            reminder.DateTime = request.DateTime;
+            reminder.SID = request.SID;
+            reminder.UpdateAt = DateTime.UtcNow;
 
-            var updateReminder = await _reminderRepository.UpdateRemindersAsync(existingReminder);
+            await _reminderRepository.UpdateAsync(reminder);
+            await _reminderRepository.SaveChangesAsync();
 
-            return _mapper.Map<ReminderResponse>(updateReminder);
+            return _mapper.Map<ReminderResponse>(reminder);
         }
 
         public async Task<bool> DeleteRemindersAsync(int rid)
         {
             return await _reminderRepository.DeleteReminders(rid);
+        }
+
+        public async Task<ReminderResponse?> GetReminderByRIDAsync(int rid)
+        {
+            var reminder = await _reminderRepository.GetReminderByRID(rid);
+            if (reminder == null)
+            {
+                return null;
+            }
+            return _mapper.Map<ReminderResponse>(reminder);
         }
     }
 }
