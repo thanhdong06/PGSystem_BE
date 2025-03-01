@@ -31,15 +31,18 @@ namespace PGSystem_Repository.Reminders
             return entity;
         }
 
-        public async Task<Reminder> GetReminderByMemberID(int mid)
+        public async Task<Reminder> GetReminderByRID(int rid)
         {
-            return await _context.Reminders.FirstOrDefaultAsync(re => re.MemberID == mid && !re.IsDeleted);
+            return await _context.Reminders.FirstOrDefaultAsync(re => re.RID == rid && !re.IsDeleted);
         }
-        public async Task<Reminder> UpdateRemindersAsync(Reminder reminder)
+        public async Task UpdateAsync(Reminder reminder)
         {
             _context.Reminders.Update(reminder);
+        }
+
+        public async Task SaveChangesAsync()
+        {
             await _context.SaveChangesAsync();
-            return reminder;
         }
         public async Task<bool> DeleteReminders(int rid)
         {

@@ -42,34 +42,23 @@ namespace PGSystem.Controllers
             }
         }
 
-        [HttpPost("Update-RID-Title")]
-        public async Task<ActionResult<JsonResponse<string>>> UpdateReminders([FromBody] ReminderRequest request)
+        [HttpPut("{rid}")]
+        public async Task<IActionResult> UpdateReminder(int rid, [FromBody] ReminderRequest request)
         {
-            try
+            if (request == null)
             {
-                if (request == null)
-                {
-                    return BadRequest(new JsonResponse<string>(null, 400, "Invalid request data"));
-                }
-
-                var updatedReminder = await _reminderService.UpdateRemindersAsync(request);
-
-                if (updatedReminder == null)
-                {
-                    return NotFound(new JsonResponse<string>(null, 404, "Reminder not found"));
-                }
-
-                return Ok(new JsonResponse<string>(null, 200, "Reminder updated successfully"));
+                return BadRequest("Invalid data");
             }
-            catch (KeyNotFoundException ex)
+
+            var updatedReminder = await _reminderService.UpdateReminderAsync(rid, request);
+            if (updatedReminder == null)
             {
-                return NotFound(new JsonResponse<string>(null, 404, ex.Message));
+                return NotFound($"Reminder with RID {rid} does not exist.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while updating the reminder"));
-            }
+
+            return Ok(updatedReminder);
         }
+
         [HttpDelete]
         public async Task<ActionResult<JsonResponse<string>>> DeleteReminders(int rid)
         {
@@ -88,6 +77,16 @@ namespace PGSystem.Controllers
             {
                 return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the reminder"));
             }
+        }
+        [HttpGet("{rid}")]
+        public async Task<IActionResult> GetReminderByRID(int rid)
+        {
+            var reminder = await _reminderService.GetReminderByRIDAsync(rid);
+            if (reminder == null)
+            {
+                return NotFound($"Reminder with  RID {rid} does not exist");
+            }
+            return Ok(reminder);
         }
     }
 }

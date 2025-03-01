@@ -19,6 +19,8 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             GrowthRecordMappingProfile();
             PregnancyRecordMappingProfile();
             ReminderMappingProfile();
+            BlogMappingProfile();
+            CommentMappingProfile();
         }
         private void UserMappingProfile()
         {
@@ -54,6 +56,16 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         {
             CreateMap<ReminderRequest, Reminder>();
             CreateMap<Reminder, ReminderResponse>();
+        }
+        private void BlogMappingProfile()
+        {
+            CreateMap<BlogRequest, Blog>();
+            CreateMap<Blog, BlogResponse>();
+        }
+        private void CommentMappingProfile()
+        {
+            CreateMap<CommentRequest, Comment>();
+            CreateMap<Comment, CommentResponse>();
         }
     }
 }

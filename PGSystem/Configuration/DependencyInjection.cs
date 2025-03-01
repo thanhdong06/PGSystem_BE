@@ -13,6 +13,10 @@ using PGSystem_Repository.PregnancyRecords;
 using PGSystem_Service.PregnancyRecords;
 using PGSystem_Repository.Reminders;
 using PGSystem_Service.Reminders;
+using PGSystem_Repository.Blogs;
+using PGSystem_Repository.Comments;
+using PGSystem_Service.Blogs;
+using PGSystem_Service.Comments;
 
 namespace PGSystem.Configuration
 {
@@ -36,6 +40,10 @@ namespace PGSystem.Configuration
             services.AddScoped<IPregnancyRecordService, PregnancyRecordService>();
             services.AddScoped<IReminderRepository, ReminderRepository>();
             services.AddScoped<IReminderService, ReminderService>();
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<ICommentService, CommentService>();
 
 
             return services;
