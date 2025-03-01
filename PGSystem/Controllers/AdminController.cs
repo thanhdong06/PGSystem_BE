@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PGSystem.ResponseType;
+using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_Service.Admin;
 
@@ -76,5 +77,46 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<SystemReportResponse>(null, 500, "An error occurred while retrieving the system report"));
             }
         }
+        [HttpDelete("DeleteMembership")]
+        public async Task<ActionResult<JsonResponse<string>>> DeleteMembership(int MID)
+        {
+            try
+            {
+                var isDeleted = await _adminService.DeleteMembership(MID);
+
+                if (!isDeleted)
+                {
+                    return NotFound(new JsonResponse<string>(null, 404, "Membership not found"));
+                }
+
+                return Ok(new JsonResponse<string>(null, 200, "Membership deleted successfully"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the Membership"));
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMembership(int id, [FromBody] MembershipsRequest request)
+        {
+            var updatedMembership = await _adminService.UpdateMembershipAsync(id, request);
+            return Ok(updatedMembership);
+        }
+
+        [HttpPost("Create")]
+        public async Task<ActionResult<JsonResponse<string>>> CreateMembership([FromBody] MembershipsRequest request)
+        {
+            try
+            {
+                await _adminService.CreateMembershipAsync(request);
+                return Ok(new JsonResponse<string>(null, 200, "Memberships created successfully"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new JsonResponse<string>("Something went wrong, please contact the admin", 400, ex.Message));
+            }
+        }
+
     }
 }
