@@ -73,7 +73,8 @@ namespace PGSystem_Service.Users
             var responseUser = new UserResponse
             {
                 Email = user.Email,
-                Phone = user.Phone,               
+                Phone = user.Phone,
+                Role = user.Role,
             };
 
             return new LoginResponse
