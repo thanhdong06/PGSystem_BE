@@ -81,7 +81,7 @@ namespace PGSystem.Controllers
 
         // API UpdateComment
         [HttpPut("{cid}")]
-        public async Task<IActionResult> UpdateComment(int cid, [FromBody] CommentRequest request)
+        public async Task<IActionResult> UpdateComment(int cid, [FromBody] CommentUpdateRequest request)
         {
             if (request == null)
             {

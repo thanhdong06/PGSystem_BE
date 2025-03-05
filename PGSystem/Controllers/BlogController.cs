@@ -78,7 +78,7 @@ namespace PGSystem.Controllers
             return Ok(blog);
         }
         [HttpPut("{bid}")]
-        public async Task<IActionResult> UpdateBlog(int bid, [FromBody] BlogRequest request)
+        public async Task<IActionResult> UpdateBlog(int bid, [FromBody] BlogUpdateRequest request)
         {
             if (request == null)
             {
