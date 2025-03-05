@@ -51,9 +51,9 @@ namespace PGSystem_Service.Comments
             return _mapper.Map<IEnumerable<CommentResponse>>(comments);
         }
 
-        public async Task<IEnumerable<CommentResponse>> GetAllCommentByBID(int bid)
+        public async Task<IEnumerable<CommentResponse>> GetAllCommentsByBIDAsync(int bid)
         {
-            var comments = _commentRepository.GetAllCommentByBID(bid);
+            var comments = await _commentRepository.GetAllByBIDAsync(bid);
             return _mapper.Map<IEnumerable<CommentResponse>>(comments);
         }
         public async Task<CommentResponse?> GetCommentByCIDAsync(int cid)

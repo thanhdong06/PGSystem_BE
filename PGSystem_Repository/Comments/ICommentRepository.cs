@@ -12,7 +12,7 @@ namespace PGSystem_Repository.Comments
         Task<IEnumerable<Comment>> GetAllAsync();
         Task<Comment> CreateAsync(Comment comment);
         Task<bool> DeleteComment(int cid);
-        Task<IEnumerable<Comment>> GetAllCommentByBID(int bid);
+        Task<IEnumerable<Comment>> GetAllByBIDAsync(int bid);
         Task<Comment?> GetByIdAsync(int cid);
         Task UpdateAsync(Comment comment);
         Task SaveChangesAsync();

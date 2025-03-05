@@ -44,12 +44,11 @@ namespace PGSystem_Repository.Comments
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Comment>> GetAllCommentByBID(int bid)
+        public async Task<IEnumerable<Comment>> GetAllByBIDAsync(int bid)
         {
-            return _context.Comments
-            .Where(c => c.BID == bid && !c.IsDeleted)
-            .Include(c => c.Member)
-            .ToList();
+            return await _context.Comments
+                .Where(c => c.BID == bid && !c.IsDeleted)
+                .ToListAsync();
         }
         public async Task<Comment?> GetByIdAsync(int cid)
         {

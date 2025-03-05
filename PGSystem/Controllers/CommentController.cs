@@ -58,13 +58,13 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the comment"));
             }
         }
-        [HttpGet("Comment/{bid}")]
-        public async Task<IActionResult> GetAllCommentByBlogId(int bid)
+        [HttpGet("by-bid/{bid}")]
+        public async Task<IActionResult> GetAllCommentsByBID(int bid)
         {
-            var comments = _commentService.GetAllCommentByBID(bid);
-            if (comments == null)
+            var comments = await _commentService.GetAllCommentsByBIDAsync(bid);
+            if (!comments.Any())
             {
-                return NotFound(new JsonResponse<List<CommentResponse>>(new List<CommentResponse>(), StatusCodes.Status404NotFound, "No Comment"));
+                return NotFound("There are no comments for this blog.");
             }
             return Ok(comments);
         }
@@ -74,7 +74,7 @@ namespace PGSystem.Controllers
             var comment = await _commentService.GetCommentByCIDAsync(cid);
             if (comment == null)
             {
-                return NotFound($"Comment với CID {cid} không tồn tại.");
+                return NotFound($"Comment with CID {cid} does not exist.");
             }
             return Ok(comment);
         }
@@ -85,13 +85,13 @@ namespace PGSystem.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Dữ liệu không hợp lệ");
+                return BadRequest("Invalid Data");
             }
 
             var updatedComment = await _commentService.UpdateCommentAsync(cid, request);
             if (updatedComment == null)
             {
-                return NotFound($"Comment với CID {cid} không tồn tại.");
+                return NotFound($"Comment with CID {cid} does not exist.");
             }
 
             return Ok(updatedComment);

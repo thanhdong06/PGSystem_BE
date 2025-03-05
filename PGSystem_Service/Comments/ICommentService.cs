@@ -14,7 +14,7 @@ namespace PGSystem_Service.Comments
 
         Task<CommentResponse> CreateCommentAsync(CommentRequest request);
         Task<bool> DeleteCommentAsync(int cid);
-        Task<IEnumerable<CommentResponse>> GetAllCommentByBID(int bid);
+        Task<IEnumerable<CommentResponse>> GetAllCommentsByBIDAsync(int bid);
         Task<CommentResponse?> GetCommentByCIDAsync(int cid);
         Task<CommentResponse?> UpdateCommentAsync(int cid, CommentRequest request);
     }
