@@ -17,30 +17,23 @@ namespace PGSystem.Controllers
         {
             _blogService = blogService;
         }
-        [HttpGet("Blog")]
-        public async Task<IActionResult> GetAllBlog()
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllBlogs()
         {
-            var blog = await _blogService.GetAllBlogsAsync();
-
-            if (blog == null || blog.Count == 0)
-            {
-                return NotFound(new JsonResponse<List<BlogResponse>>(new List<BlogResponse>(), StatusCodes.Status404NotFound, "No Blog found"));
-            }
-            return Ok(new JsonResponse<List<BlogResponse>>(blog, StatusCodes.Status200OK, "Blog list retrieved successfully"));
+            var blogs = await _blogService.GetAllBlogsAsync();
+            return Ok(blogs);
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<JsonResponse<string>>> CreateBlog([FromBody] BlogRequest request)
+        public async Task<IActionResult> CreateBlog([FromBody] BlogRequest request)
         {
-            try
+            if (request == null)
             {
-                await _blogService.CreateBlogAsync(request);
-                return Ok(new JsonResponse<string>(null, 200, "Blog created successfully"));
+                return BadRequest("Invalid Data");
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new JsonResponse<string>("Something went wrong, please contact the admin", 400, ex.Message));
-            }
+
+            var createdBlog = await _blogService.CreateBlogAsync(request);
+            return Ok(createdBlog);
         }
         [HttpDelete]
         public async Task<ActionResult<JsonResponse<string>>> DeleteBlog(int bid)
@@ -61,7 +54,7 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the blog"));
             }
         }
-        [HttpGet("GetAllByAuthor/{AID}")]
+        [HttpGet("GetAllByAuthor/{aid}")]
         public async Task<IActionResult> GetAllBlogByAID(int aid)
         {
 
@@ -69,7 +62,7 @@ namespace PGSystem.Controllers
 
             if (blog == null || !blog.Any())
             {
-                return NotFound(new JsonResponse<List<BlogResponse>>(new List<BlogResponse>(), StatusCodes.Status404NotFound, "No Blog found"));
+                return NotFound(new JsonResponse<List<BlogResponse>>(new List<BlogResponse>(), StatusCodes.Status404NotFound, "There are no blogs by this author"));
             }
 
             return Ok(blog);
@@ -80,7 +73,7 @@ namespace PGSystem.Controllers
             var blog = await _blogService.GetBlogByBIDAsync(bid);
             if (blog == null)
             {
-                return NotFound($"Blog với BID {bid} không tồn tại.");
+                return NotFound($"Blog with BID {bid} does not exist.");
             }
             return Ok(blog);
         }
@@ -95,7 +88,7 @@ namespace PGSystem.Controllers
             var updatedBlog = await _blogService.UpdateBlogAsync(bid, request);
             if (updatedBlog == null)
             {
-                return NotFound($"Blog với BID {bid} không tồn tại.");
+                return NotFound($"Blog with BID {bid} does not exist.");
             }
 
             return Ok(updatedBlog);

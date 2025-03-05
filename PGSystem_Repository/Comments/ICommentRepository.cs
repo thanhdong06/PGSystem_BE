@@ -9,10 +9,10 @@ namespace PGSystem_Repository.Comments
 {
     public interface ICommentRepository
     {
-        Task<List<Comment>> GetAllCommentAsync();
-        Task<Comment> CreateCommentsAsync(Comment entity);
+        Task<IEnumerable<Comment>> GetAllAsync();
+        Task<Comment> CreateAsync(Comment comment);
         Task<bool> DeleteComment(int cid);
-        Task<IEnumerable<Comment>> GetAllCommentByBID(int bid);
+        Task<IEnumerable<Comment>> GetAllByBIDAsync(int bid);
         Task<Comment?> GetByIdAsync(int cid);
         Task UpdateAsync(Comment comment);
         Task SaveChangesAsync();

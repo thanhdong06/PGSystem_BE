@@ -10,8 +10,7 @@ namespace PGSystem_Service.Blogs
 {
     public interface IBlogService
     {
-        Task<List<BlogResponse>> GetAllBlogsAsync();
-
+        Task<IEnumerable<BlogResponse>> GetAllBlogsAsync();
         Task<BlogResponse> CreateBlogAsync(BlogRequest request);
         Task<bool> DeleteBlogsAsync(int bid);
         Task<IEnumerable<BlogResponse>> GetAllBlogByAID(int aid);

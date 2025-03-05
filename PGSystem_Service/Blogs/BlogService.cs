@@ -23,14 +23,21 @@ namespace PGSystem_Service.Blogs
         }
         public async Task<BlogResponse> CreateBlogAsync(BlogRequest request)
         {
-            var entity = _mapper.Map<Blog>(request);
-            entity.Title = request.Title;
-            entity.Content = request.Content;
-            entity.CreateAt = entity.UpdateAt = DateTime.UtcNow;
+            var newBlog = new Blog
+            {
+                Title = request.Title,
+                Content = request.Content,
+                Type = request.Type,
+                AID = request.AID,
+                CreateAt = DateTime.UtcNow,
+                UpdateAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
 
-            var createdBlog = await _blogRepository.CreateBlogsAsync(entity);
+            await _blogRepository.CreateBlogsAsync(newBlog);
+            await _blogRepository.SaveChangesAsync();
 
-            return _mapper.Map<BlogResponse>(createdBlog);
+            return _mapper.Map<BlogResponse>(newBlog);
         }
 
         public async Task<bool> DeleteBlogsAsync(int bid)
@@ -44,15 +51,10 @@ namespace PGSystem_Service.Blogs
             return _mapper.Map<IEnumerable<BlogResponse>>(blog);
         }
 
-        public async Task<List<BlogResponse>> GetAllBlogsAsync()
+        public async Task<IEnumerable<BlogResponse>> GetAllBlogsAsync()
         {
-            var blog = await _blogRepository.GetAllBlogAsync();
-
-            return blog.Select(b => new BlogResponse
-            {
-                Title = b.Title,
-                Content = b.Content,
-            }).ToList();
+            var blogs = await _blogRepository.GetAllBlogAsync();
+            return _mapper.Map<IEnumerable<BlogResponse>>(blogs);
         }
         public async Task<BlogResponse?> GetBlogByBIDAsync(int bid)
         {

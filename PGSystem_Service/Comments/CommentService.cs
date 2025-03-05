@@ -24,13 +24,20 @@ namespace PGSystem_Service.Comments
 
         public async Task<CommentResponse> CreateCommentAsync(CommentRequest request)
         {
-            var entity = _mapper.Map<Comment>(request);
-            entity.Content = request.Content;
-            entity.CreateAt = entity.UpdateAt = DateTime.UtcNow;
+            var newComment = new Comment
+            {
+                Content = request.Content,
+                BID = request.BID,
+                MemberID = request.MemberID,
+                CreateAt = DateTime.UtcNow,
+                UpdateAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
 
-            var createdComment = await _commentRepository.CreateCommentsAsync(entity);
+            await _commentRepository.CreateAsync(newComment);
+            await _commentRepository.SaveChangesAsync();
 
-            return _mapper.Map<CommentResponse>(createdComment);
+            return _mapper.Map<CommentResponse>(newComment);
         }
 
         public async Task<bool> DeleteCommentAsync(int cid)
@@ -38,19 +45,15 @@ namespace PGSystem_Service.Comments
             return await _commentRepository.DeleteComment(cid);
         }
 
-        public async Task<List<CommentResponse>> GetAllCommentAsync()
+        public async Task<IEnumerable<CommentResponse>> GetAllCommentsAsync()
         {
-            var comment = await _commentRepository.GetAllCommentAsync();
-
-            return comment.Select(c => new CommentResponse
-            {
-                Content = c.Content,
-            }).ToList();
+            var comments = await _commentRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<CommentResponse>>(comments);
         }
 
-        public async Task<IEnumerable<CommentResponse>> GetAllCommentByBID(int bid)
+        public async Task<IEnumerable<CommentResponse>> GetAllCommentsByBIDAsync(int bid)
         {
-            var comments = _commentRepository.GetAllCommentByBID(bid);
+            var comments = await _commentRepository.GetAllByBIDAsync(bid);
             return _mapper.Map<IEnumerable<CommentResponse>>(comments);
         }
         public async Task<CommentResponse?> GetCommentByCIDAsync(int cid)

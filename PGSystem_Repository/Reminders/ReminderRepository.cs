@@ -18,11 +18,11 @@ namespace PGSystem_Repository.Reminders
             _context = context;
         }
 
-        public async Task<List<Reminder>> GetAllRemindersAsync()
+        public async Task<IEnumerable<Reminder>> GetAllAsync()
         {
-            {
-                return await _context.Reminders.ToListAsync();
-            }
+            return await _context.Reminders
+                .Where(r => !r.IsDeleted)
+                .ToListAsync();
         }
         public async Task<Reminder> CreateRemindersAsync(Reminder entity)
         {

@@ -17,30 +17,27 @@ namespace PGSystem.Controllers
         {
             _commentService = commentService;
         }
-        [HttpGet("Comment")]
-        public async Task<IActionResult> GetAllComment()
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllComments()
         {
-            var comment = await _commentService.GetAllCommentAsync();
-
-            if (comment == null || comment.Count == 0)
+            var comments = await _commentService.GetAllCommentsAsync();
+            if (comments == null || !comments.Any())
             {
-                return NotFound(new JsonResponse<List<CommentResponse>>(new List<CommentResponse>(), StatusCodes.Status404NotFound, "No Cooment"));
+                return NotFound(new JsonResponse<List<CommentResponse>>(new List<CommentResponse>(), StatusCodes.Status404NotFound, "No Comment"));
             }
-            return Ok(new JsonResponse<List<CommentResponse>>(comment, StatusCodes.Status200OK, "Comment list retrieved successfully"));
+            return Ok(comments);
         }
 
-        [HttpPost("Create")]
-        public async Task<ActionResult<JsonResponse<string>>> CreateComment([FromBody] CommentRequest request)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateComment([FromBody] CommentRequest request)
         {
-            try
+            if (request == null)
             {
-                await _commentService.CreateCommentAsync(request);
-                return Ok(new JsonResponse<string>(null, 200, "Blog created successfully"));
+                return BadRequest("Invalid Data");
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new JsonResponse<string>("Something went wrong, please contact the admin", 400, ex.Message));
-            }
+
+            var createdComment = await _commentService.CreateCommentAsync(request);
+            return Ok(createdComment);
         }
         [HttpDelete]
         public async Task<ActionResult<JsonResponse<string>>> DeleteComment(int cid)
@@ -61,13 +58,13 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the comment"));
             }
         }
-        [HttpGet("Comment/{BID}")]
-        public async Task<IActionResult> GetAllCommentByBlogId(int bid)
+        [HttpGet("by-bid/{bid}")]
+        public async Task<IActionResult> GetAllCommentsByBID(int bid)
         {
-            var comments = _commentService.GetAllCommentByBID(bid);
-            if (comments == null)
+            var comments = await _commentService.GetAllCommentsByBIDAsync(bid);
+            if (!comments.Any())
             {
-                return NotFound(new JsonResponse<List<CommentResponse>>(new List<CommentResponse>(), StatusCodes.Status404NotFound, "No Comment"));
+                return NotFound("There are no comments for this blog.");
             }
             return Ok(comments);
         }
@@ -77,7 +74,7 @@ namespace PGSystem.Controllers
             var comment = await _commentService.GetCommentByCIDAsync(cid);
             if (comment == null)
             {
-                return NotFound($"Comment với CID {cid} không tồn tại.");
+                return NotFound($"Comment with CID {cid} does not exist.");
             }
             return Ok(comment);
         }
@@ -88,13 +85,13 @@ namespace PGSystem.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Dữ liệu không hợp lệ");
+                return BadRequest("Invalid Data");
             }
 
             var updatedComment = await _commentService.UpdateCommentAsync(cid, request);
             if (updatedComment == null)
             {
-                return NotFound($"Comment với CID {cid} không tồn tại.");
+                return NotFound($"Comment with CID {cid} does not exist.");
             }
 
             return Ok(updatedComment);

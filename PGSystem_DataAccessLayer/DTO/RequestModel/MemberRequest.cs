@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace PGSystem_DataAccessLayer.DTO.RequestModel
 {
-    public class CommentRequest
+    public class MemberRequest
     {
-        public string Content { get; set; }
-        public int BID { get; set; }
-        public int MemberID { get; set; }
+        public string MemberName { get; set; }
+        public int MembershipID { get; set; }
     }
 }

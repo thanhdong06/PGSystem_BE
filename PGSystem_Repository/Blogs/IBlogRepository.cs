@@ -9,9 +9,9 @@ namespace PGSystem_Repository.Blogs
 {
     public interface IBlogRepository
     {
-        Task<List<Blog>> GetAllBlogAsync();
+        Task<IEnumerable<Blog>> GetAllBlogAsync();
         Task<IEnumerable<Blog>> GetBlogByAidAsync(int aid);
-        Task<Blog> CreateBlogsAsync(Blog entity);
+        Task<Blog> CreateBlogsAsync(Blog blog);
         Task<bool> DeleteBlogs(int bid);
         Task<Blog?> GetByIdAsync(int bid);
         Task UpdateAsync(Blog blog);

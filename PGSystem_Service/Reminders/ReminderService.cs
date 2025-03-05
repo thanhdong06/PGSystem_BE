@@ -21,16 +21,10 @@ namespace PGSystem_Service.Reminders
             _reminderRepository = reminderRepository;
             _mapper = mapper;
         }
-        public async Task<List<ReminderResponse>> GetAllRemindersAsync()
+        public async Task<IEnumerable<ReminderResponse>> GetAllRemindersAsync()
         {
-            var reminders = await _reminderRepository.GetAllRemindersAsync();
-
-            return reminders.Select(r => new ReminderResponse
-            {
-                Title = r.Title,
-                Description = r.Description,
-                DateTime = r.DateTime,
-            }).ToList();
+            var reminders = await _reminderRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<ReminderResponse>>(reminders);
         }
         public async Task<ReminderResponse> CreateReminderAsync(ReminderRequest request)
         {
@@ -38,6 +32,7 @@ namespace PGSystem_Service.Reminders
             entity.Title = request.Title;
             entity.Description = request.Description;
             entity.DateTime = request.DateTime;
+            entity.SID = 1;
             entity.CreateAt = entity.UpdateAt = DateTime.UtcNow;
 
             var createdReminder = await _reminderRepository.CreateRemindersAsync(entity);
@@ -57,7 +52,7 @@ namespace PGSystem_Service.Reminders
             reminder.Title = request.Title;
             reminder.Description = request.Description;
             reminder.DateTime = request.DateTime;
-            reminder.SID = request.SID;
+            reminder.SID = 1;
             reminder.UpdateAt = DateTime.UtcNow;
 
             await _reminderRepository.UpdateAsync(reminder);
