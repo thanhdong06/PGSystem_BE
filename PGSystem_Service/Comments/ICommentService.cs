@@ -10,7 +10,7 @@ namespace PGSystem_Service.Comments
 {
     public interface ICommentService
     {
-        Task<List<CommentResponse>> GetAllCommentAsync();
+        Task<IEnumerable<CommentResponse>> GetAllCommentsAsync();
 
         Task<CommentResponse> CreateCommentAsync(CommentRequest request);
         Task<bool> DeleteCommentAsync(int cid);

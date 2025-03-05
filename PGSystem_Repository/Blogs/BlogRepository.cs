@@ -17,13 +17,7 @@ namespace PGSystem_Repository.Blogs
         {
             _context = context;
         }
-        public async Task<Blog> CreateBlogsAsync(Blog entity)
-        {
-            _context.Blogs.Add(entity);
-            await _context.SaveChangesAsync();
-            return entity;
-        }
-
+       
         public async Task<bool> DeleteBlogs(int bid)
         {
             var blog = await _context.Blogs.FirstOrDefaultAsync(b => b.BID == bid && !b.IsDeleted);
@@ -38,10 +32,12 @@ namespace PGSystem_Repository.Blogs
             return true;
         }
 
-        public async Task<List<Blog>> GetAllBlogAsync()
+        public async Task<IEnumerable<Blog>> GetAllBlogAsync()
         {
             {
-                return await _context.Blogs.ToListAsync();
+                return await _context.Blogs
+            .Where(b => !b.IsDeleted)
+            .ToListAsync();
             }
         }
 
@@ -65,6 +61,12 @@ namespace PGSystem_Repository.Blogs
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Blog> CreateBlogsAsync(Blog blog)
+        {
+            await _context.Blogs.AddAsync(blog);
+            return blog;
         }
     }
 }

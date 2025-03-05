@@ -17,11 +17,10 @@ namespace PGSystem_Repository.Comments
         {
             _context = context;
         }
-        public async Task<Comment> CreateCommentsAsync(Comment entity)
+        public async Task<Comment> CreateAsync(Comment comment)
         {
-            _context.Comments.Add(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            await _context.Comments.AddAsync(comment);
+            return comment;
         }
 
         public async Task<bool> DeleteComment(int cid)
@@ -38,11 +37,11 @@ namespace PGSystem_Repository.Comments
             return true;
         }
 
-        public async Task<List<Comment>> GetAllCommentAsync()
+        public async Task<IEnumerable<Comment>> GetAllAsync()
         {
-            {
-                return await _context.Comments.ToListAsync();
-            }
+            return await _context.Comments
+                .Where(c => !c.IsDeleted)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Comment>> GetAllCommentByBID(int bid)
