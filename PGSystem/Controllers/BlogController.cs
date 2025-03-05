@@ -54,13 +54,13 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the blog"));
             }
         }
-        [HttpGet("GetAllByAuthor/{AID}")]
+        [HttpGet("GetAllByAuthor/{aid}")]
         public async Task<IActionResult> GetAllBlogByAID(int aid)
         {
 
             var blog = await _blogService.GetAllBlogByAID(aid);
 
-            if (!blog.Any())
+            if (blog == null)
             {
                 return NotFound(new JsonResponse<List<BlogResponse>>(new List<BlogResponse>(), StatusCodes.Status404NotFound, "There are no blogs by this author"));
             }
@@ -73,7 +73,7 @@ namespace PGSystem.Controllers
             var blog = await _blogService.GetBlogByBIDAsync(bid);
             if (blog == null)
             {
-                return NotFound($"Blog với BID {bid} không tồn tại.");
+                return NotFound($"Blog with BID {bid} does not exist.");
             }
             return Ok(blog);
         }
@@ -88,7 +88,7 @@ namespace PGSystem.Controllers
             var updatedBlog = await _blogService.UpdateBlogAsync(bid, request);
             if (updatedBlog == null)
             {
-                return NotFound($"Blog với BID {bid} không tồn tại.");
+                return NotFound($"Blog with BID {bid} does not exist.");
             }
 
             return Ok(updatedBlog);
