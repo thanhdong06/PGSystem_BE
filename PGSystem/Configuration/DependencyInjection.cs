@@ -17,6 +17,8 @@ using PGSystem_Repository.Blogs;
 using PGSystem_Repository.Comments;
 using PGSystem_Service.Blogs;
 using PGSystem_Service.Comments;
+using PGSystem_Repository.Members;
+using PGSystem_Service.Members;
 
 namespace PGSystem.Configuration
 {
@@ -44,7 +46,8 @@ namespace PGSystem.Configuration
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICommentService, CommentService>();
-
+            services.AddScoped<IMembersRepository, MembersRepository>();
+            services.AddScoped<IMembersService, MembersService>();
 
             return services;
         }

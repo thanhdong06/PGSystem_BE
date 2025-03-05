@@ -21,6 +21,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             ReminderMappingProfile();
             BlogMappingProfile();
             CommentMappingProfile();
+            MemberProfile();
         }
         private void UserMappingProfile()
         {
@@ -65,6 +66,12 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         {
             CreateMap<CommentRequest, Comment>();
             CreateMap<Comment, CommentResponse>();
+        }
+        private void MemberProfile()
+        {
+            CreateMap<Member, MemberResponse>()
+           .ForMember(dest => dest.MembershipName, opt => opt.MapFrom(src => src.Membership.Name))
+           .ForMember(dest => dest.Blogs, opt => opt.MapFrom(src => src.Blogs.Select(b => b.Title).ToList()));
         }
     }
 }
