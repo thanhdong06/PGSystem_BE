@@ -19,46 +19,46 @@ public class MembersController : Controller
 
    
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetMemberById(int id)
-        {
-            try
-            {
-                var member = await _membersService.GetMemberByIdAsync(id);
-                return Ok(member);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-        }
-    [HttpPost("Register Member")]
-    public async Task<IActionResult> RegisterMember([FromBody] MemberRequest request)
-    {
-        try
-        {
-            var newMember = await _membersService.RegisterMemberAsync(request);
-            return CreatedAtAction(nameof(GetMemberById), new { id = newMember.MemberID }, newMember);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
-    }
+    //    [HttpGet("{id}")]
+    //    public async Task<IActionResult> GetMemberById(int id)
+    //    {
+    //        try
+    //        {
+    //            var member = await _membersService.GetMemberByIdAsync(id);
+    //            return Ok(member);
+    //        }
+    //        catch (KeyNotFoundException ex)
+    //        {
+    //            return NotFound(new { message = ex.Message });
+    //        }
+    //    }
+    //[HttpPost("Register Member")]
+    //public async Task<IActionResult> RegisterMember([FromBody] MemberRequest request)
+    //{
+    //    try
+    //    {
+    //        var newMember = await _membersService.RegisterMemberAsync(request);
+    //        return CreatedAtAction(nameof(GetMemberById), new { id = newMember.MemberID }, newMember);
+    //    }
+    //    catch (KeyNotFoundException ex)
+    //    {
+    //        return NotFound(new { message = ex.Message });
+    //    }
+    //}
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateMember(int id, [FromBody] MemberRequest request)
-    {
-        try
-        {
-            var updatedMember = await _membersService.UpdateMemberAsync(id, request);
-            return Ok(updatedMember);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
-    }
+    //[HttpPut("{id}")]
+    //public async Task<IActionResult> UpdateMember(int id, [FromBody] MemberRequest request)
+    //{
+    //    try
+    //    {
+    //        var updatedMember = await _membersService.UpdateMemberAsync(id, request);
+    //        return Ok(updatedMember);
+    //    }
+    //    catch (KeyNotFoundException ex)
+    //    {
+    //        return NotFound(new { message = ex.Message });
+    //    }
+    //}
 
     [HttpDelete("SortDelete")]
     public async Task<IActionResult> DeleteMembers(int id)

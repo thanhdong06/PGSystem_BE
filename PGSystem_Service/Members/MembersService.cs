@@ -38,7 +38,6 @@ namespace PGSystem_Service.Members
             return members.Select(m => new MemberResponse
             {
                MemberID = m.MemberID,
-               MemberName =m.MemberName,
             }) .ToList();
         }
 

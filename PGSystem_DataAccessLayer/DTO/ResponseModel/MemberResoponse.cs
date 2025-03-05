@@ -9,7 +9,6 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
     public class MemberResponse
     {
         public int MemberID { get; set; }
-        public string MemberName { get; set; }
 
         // Membership
         public int MembershipID { get; set; }
