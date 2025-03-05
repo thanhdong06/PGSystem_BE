@@ -61,6 +61,7 @@ namespace PGSystem_Repository.Users
                 Email = request.Email,
                 Password = hashedPassword,
                 Phone = request.Phone,
+                FullName = request.FullName,
                 Role = "User",
                 CreateAt = DateTime.Now,
                 UpdateAt = DateTime.Now,
