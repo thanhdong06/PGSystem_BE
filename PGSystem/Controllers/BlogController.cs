@@ -60,7 +60,7 @@ namespace PGSystem.Controllers
 
             var blog = await _blogService.GetAllBlogByAID(aid);
 
-            if (blog == null)
+            if (blog == null || !blog.Any())
             {
                 return NotFound(new JsonResponse<List<BlogResponse>>(new List<BlogResponse>(), StatusCodes.Status404NotFound, "There are no blogs by this author"));
             }

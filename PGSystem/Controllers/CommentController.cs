@@ -21,7 +21,7 @@ namespace PGSystem.Controllers
         public async Task<IActionResult> GetAllComments()
         {
             var comments = await _commentService.GetAllCommentsAsync();
-            if (comments == null)
+            if (comments == null || !comments.Any())
             {
                 return NotFound(new JsonResponse<List<CommentResponse>>(new List<CommentResponse>(), StatusCodes.Status404NotFound, "No Comment"));
             }
@@ -58,7 +58,7 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the comment"));
             }
         }
-        [HttpGet("Comment/{BID}")]
+        [HttpGet("Comment/{bid}")]
         public async Task<IActionResult> GetAllCommentByBlogId(int bid)
         {
             var comments = _commentService.GetAllCommentByBID(bid);

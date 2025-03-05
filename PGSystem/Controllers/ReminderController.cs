@@ -15,18 +15,28 @@ namespace PGSystem.Controllers
         {
             _reminderService = reminderService;
         }
-
-        [HttpGet("Reminder")]
-        public async Task<IActionResult> GetAllReminder()
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllReminders()
         {
             var reminders = await _reminderService.GetAllRemindersAsync();
-
-            if (reminders == null || reminders.Count == 0)
+            if (reminders == null || !reminders.Any())
             {
                 return NotFound(new JsonResponse<List<ReminderResponse>>(new List<ReminderResponse>(), StatusCodes.Status404NotFound, "No reminders found"));
             }
-            return Ok(new JsonResponse<List<ReminderResponse>>(reminders, StatusCodes.Status200OK, "Reminder list retrieved successfully"));
+            return Ok(reminders);
         }
+
+        //[HttpGet("Reminder")]
+        //public async Task<IActionResult> GetAllReminder()
+        //{
+        //    var reminders = await _reminderService.GetAllRemindersAsync();
+
+        //    if (reminders == null || reminders.Count == 0)
+        //    {
+        //        return NotFound(new JsonResponse<List<ReminderResponse>>(new List<ReminderResponse>(), StatusCodes.Status404NotFound, "No reminders found"));
+        //    }
+        //    return Ok(new JsonResponse<List<ReminderResponse>>(reminders, StatusCodes.Status200OK, "Reminder list retrieved successfully"));
+        //}
 
         [HttpPost("Create")]
         public async Task<ActionResult<JsonResponse<string>>> CreateReminders([FromBody] ReminderRequest request)
