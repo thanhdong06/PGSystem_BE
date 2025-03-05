@@ -15,5 +15,6 @@ namespace PGSystem_DataAccessLayer.Entities
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Reminder> Reminders { get; set; }
         public PregnancyRecord PregnancyRecord { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
