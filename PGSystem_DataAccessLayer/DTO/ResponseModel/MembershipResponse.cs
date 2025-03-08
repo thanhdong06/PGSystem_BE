@@ -8,6 +8,7 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
 {
     public class MembershipResponse
     {
+        public int MID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }

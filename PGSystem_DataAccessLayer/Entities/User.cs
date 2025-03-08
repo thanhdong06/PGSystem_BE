@@ -21,7 +21,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
 
-        public Member Members { get; set; }
+        public Member Member { get; set; }
         public ICollection<Admin> Admins { get; set; }
     }
 }
