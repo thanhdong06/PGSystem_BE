@@ -11,11 +11,11 @@ namespace PGSystem_Service.Members
 {
     public interface IMembersService
     {
-        Task<List<MemberResponse>> GetAllMembersAsync();
-        Task<MemberResponse> GetMemberByIdAsync(int memberId);
-        Task<MemberResponse> RegisterMemberAsync(MemberRequest request);
-        Task<bool> UpdateMemberAsync(int memberId, MemberRequest request);
-        Task<bool> DeleteMemberAsync(int memberId);
+        //Task<List<MemberResponse>> GetAllMembersAsync();
+        //Task<MemberResponse> GetMemberByIdAsync(int memberId);
+        //Task<MemberResponse> RegisterMemberAsync(MemberRequest request);
+        //Task<bool> UpdateMemberAsync(int memberId, MemberRequest request);
+        //Task<bool> DeleteMemberAsync(int memberId);
     }
 
 }

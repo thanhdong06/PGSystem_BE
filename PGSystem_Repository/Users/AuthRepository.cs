@@ -27,6 +27,10 @@ namespace PGSystem_Repository.Users
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
+        public async Task<User> GetUserByIDAsync(int uid)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.UID == uid);
+        }
 
         public async Task AddUserAsync(User user)
         {

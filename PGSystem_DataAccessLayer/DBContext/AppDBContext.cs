@@ -2,6 +2,7 @@
 using BCrypt.Net;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PGSystem_DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -110,6 +111,11 @@ namespace PGSystem_DataAccessLayer.DBContext
             // Configure Member
             modelBuilder.Entity<Member>()
                 .HasKey(m => m.MemberID);
+            modelBuilder.Entity<Member>()
+                .HasOne(m => m.User)
+                .WithOne(u => u.Member)
+                .HasForeignKey<Member>(m => m.UserUID);
+
             modelBuilder.Entity<Member>()
                 .HasOne(m => m.Membership)
                 .WithMany(ms => ms.Members)

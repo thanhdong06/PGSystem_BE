@@ -21,7 +21,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             ReminderMappingProfile();
             BlogMappingProfile();
             CommentMappingProfile();
-            MemberProfile();
+            MemberMappingProfile();
         }
         private void UserMappingProfile()
         {
@@ -67,16 +67,18 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CreateMap<CommentRequest, Comment>();
             CreateMap<Comment, CommentResponse>();
         }
-        private void MemberProfile()
+        private void MemberMappingProfile()
         {
             CreateMap<Member, MemberResponse>()
-     .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName))
-     .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
-     .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.User.Phone))
-     .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.User.CreateAt))
-     .ForMember(dest => dest.MembershipName, opt => opt.MapFrom(src => src.Membership.Name))
-     ;
-        }
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserUID))
+                .ForMember(dest => dest.MembershipId, opt => opt.MapFrom(src => src.MembershipID))
+                .ReverseMap();
 
+            CreateMap<RegisterMembershipRequest, Member>()
+                .ForMember(dest => dest.MemberID, opt => opt.Ignore()) // ID tự động tạo
+                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()) // Mặc định là false
+                .ForMember(dest => dest.User, opt => opt.Ignore()) // Không map User object
+                .ForMember(dest => dest.Membership, opt => opt.Ignore()); // Không map Membership object
+        }
     }
 }

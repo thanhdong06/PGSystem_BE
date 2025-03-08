@@ -15,7 +15,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public int MemberID { get; set; }
 
         // Liên kết với User
-        public int UID { get; set; }
+        public int UserUID { get; set; }
         public User User { get; set; }
 
         // Liên kết với Membership
