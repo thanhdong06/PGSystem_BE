@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using PGSystem_Repository.Admin;
 using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.Entities;
+using PGSystem_Repository.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace PGSystem_Service.Members
 {
@@ -20,30 +22,27 @@ namespace PGSystem_Service.Members
     {
 
         private readonly IAdminRepository _adminRepository;
-         
+        private readonly IAuthRepository _authRepository;
         private readonly IMembersRepository _memberRepository;
         private readonly IMapper _mapper;
-        public MembersService(IMembersRepository membersRepository, IMapper mapper, IAdminRepository adminRepository)
+        
+        public MembersService(IMembersRepository membersRepository, IMapper mapper, IAdminRepository adminRepository )
         {
             _memberRepository = membersRepository;
             _mapper = mapper;
             _adminRepository = adminRepository;
             
-        }
 
+        }
         public async Task<List<MemberResponse>> GetAllMembersAsync()
         {
             var members = await _memberRepository.GetAllMembersAsync();
-
-            return members.Select(m => new MemberResponse
-            {
-               MemberID = m.MemberID,
-            }) .ToList();
+            return _mapper.Map<List<MemberResponse>>(members);
         }
 
-        public async Task<MemberResponse> GetMemberByIdAsync(int id)
+        public async Task<MemberResponse> GetMemberByIdAsync(int memberId)
         {
-            var member = await _memberRepository.GetByIdAsync(id);
+            var member = await _memberRepository.GetMemberByIdAsync(memberId);
             if (member == null)
             {
                 throw new KeyNotFoundException("Member not found.");
@@ -54,70 +53,75 @@ namespace PGSystem_Service.Members
 
         public async Task<MemberResponse> RegisterMemberAsync(MemberRequest request)
         {
-            // Kiểm tra MembershipID hợp lệ
-            var membership = await _adminRepository.GetByIdAsync(request.MembershipID);
-            if (membership == null)
+            // Kiểm tra xem User có tồn tại không
+            var user = await _memberRepository.GetMemberByUserIdAsync(request.UID);
+            if (user == null)
             {
-                throw new KeyNotFoundException("Membership not found.");
+                throw new KeyNotFoundException("User does not exist.");
             }
 
-            // Tạo đối tượng Member từ request
-            var newMember = _mapper.Map<Member>(request);
-            newMember.Membership = membership;
+            // Kiểm tra nếu User đã có Membership chưa
+            var existingMember = await _memberRepository.GetMemberByUserIdAsync(request.UID);
+            if (existingMember != null)
+            {
+                throw new InvalidOperationException("User already has a membership.");
+            }
 
-            // Thêm vào database
-            var createdMember = await _memberRepository.AddMemberAsync(newMember);
+            // Kiểm tra xem Membership có tồn tại không
+            var membership = await _adminRepository.GetByIdAsync(request.MembershipID);
+            if (membership == null || membership.IsDeleted)
+            {
+                throw new KeyNotFoundException("Invalid membership plan.");
+            }
 
-            // Chuyển đổi thành DTO Response và trả về
+            // Tạo mới Membership cho User
+            var newMember = new Member
+            {
+                UID = request.UID,
+                MembershipID = request.MembershipID,
+                Membership = membership,
+                IsDeleted = false
+            };
+
+            var createdMember = await _memberRepository.CreateMemberAsync(newMember);
             return _mapper.Map<MemberResponse>(createdMember);
         }
-
-
-
-        public async Task<MemberResponse> UpdateMemberAsync(int id, MemberRequest request)
+        public async Task<bool> UpdateMemberAsync(int memberId, MemberRequest request)
         {
-            // Tìm thành viên theo ID
-            var existingMember = await _memberRepository.GetByIdAsync(id);
-            if (existingMember == null)
+            // 1. Tìm thành viên
+            var member = await _memberRepository.GetMemberByUserIdAsync(memberId);
+            if (member == null)
             {
                 throw new KeyNotFoundException("Member not found.");
             }
 
-            // Kiểm tra MembershipID hợp lệ
+            // 2. Kiểm tra MembershipID hợp lệ
             var membership = await _adminRepository.GetByIdAsync(request.MembershipID);
-            if (membership == null)
+            if (membership == null || membership.IsDeleted)
             {
-                throw new KeyNotFoundException("Membership not found.");
+                throw new KeyNotFoundException("Invalid membership plan.");
             }
 
-            // Cập nhật thông tin
-            _mapper.Map(request, existingMember);
-            existingMember.Membership = membership;
+            // 3. Cập nhật thông tin
+            //member.User.FullName = request.FullName;
+            member.MembershipID = request.MembershipID;
+            member.Membership = membership;
 
-            // Lưu vào DB
-            var updatedMember = await _memberRepository.UpdateMemberAsync(existingMember);
-
-            // Trả về DTO Response
-            return _mapper.Map<MemberResponse>(updatedMember);
+            return await _memberRepository.UpdateMemberAsync(member);
         }
-
-
-
-        public async Task<bool> SoftDeleteMemberAsync(int id)
+        public async Task<bool> DeleteMemberAsync(int memberId)
         {
-            // Tìm thành viên theo ID
-            var existingMember = await _memberRepository.GetByIdAsync(id);
-            if (existingMember == null)
+            // 1. Tìm thành viên
+            var member = await _memberRepository.GetMemberByUserIdAsync(memberId);
+            if (member == null || member.IsDeleted)
             {
-                throw new KeyNotFoundException("Member not found.");
+                throw new KeyNotFoundException("Member not found or already deleted.");
             }
 
-            // Thực hiện xóa mềm
-            await _memberRepository.SoftDeleteMemberAsync(existingMember);
-            return true;
+            // 2. Hủy tư cách thành viên (xóa mềm)
+            return await _memberRepository.SoftDeleteMemberAsync(member);
         }
-
     }
-
 }
+    
 

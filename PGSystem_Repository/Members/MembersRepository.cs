@@ -23,54 +23,53 @@ namespace PGSystem_Repository.Members
 
         public async Task<List<Member>> GetAllMembersAsync()
         {
-            return await _context.Members.ToListAsync();
+            return await _context.Members
+                .Where(m => !m.IsDeleted) // Bỏ qua thành viên đã bị xóa
+                .Include(m => m.User) // Lấy thông tin User
+                .Include(m => m.Membership) // Lấy thông tin Membership
+                .ToListAsync();
         }
 
-        public async Task<Member> GetByIdAsync(int id)
+        public async Task<Member> GetMemberByIdAsync(int memberId)
         {
-            // Tìm thành viên theo ID và tải kèm dữ liệu liên quan
-            var member = await _context.Members
-                .Where(m => m.MemberID == id)  // Lọc theo ID
-                .Include(m => m.Membership)    // Tải thông tin Membership
-                .Include(m => m.Blogs)         // Tải danh sách Blogs
-                .Include(m => m.Comments)      // Tải danh sách Comments
-                .Include(m => m.Reminders)     // Tải danh sách Reminders
-                .Include(m => m.PregnancyRecord) // Tải thông tin Pregnancy Record (nếu có)
-                .FirstOrDefaultAsync(); // Lấy phần tử đầu tiên hoặc trả về null nếu không tìm thấy     
+            return await _context.Members
+                .Where(m => !m.IsDeleted && m.MemberID == memberId) // Lọc thành viên chưa bị xóa
+                .Include(m => m.User) // Lấy thông tin User
+                .Include(m => m.Membership) // Lấy thông tin Membership
+                .FirstOrDefaultAsync();
 
-            return member;
         }
 
-        public async Task<Member> AddMemberAsync(Member member)
+
+
+            public async Task<Member> GetMemberByUserIdAsync(int userId)
+        {
+            return await _context.Members
+                .Include(m => m.Membership) //neu can lay thong tin cua membership  
+                .FirstOrDefaultAsync(m => m.UID == userId && !m.IsDeleted);
+        }
+        public async Task<User> GetUserByIDAsync(int uid)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.UID == uid);
+        }
+        public async Task<Member> CreateMemberAsync(Member member)
         {
             _context.Members.Add(member);
             await _context.SaveChangesAsync();
             return member;
         }
-
-
-        public async Task<Member?> GetMemberAsync(int id)
-        {
-            return await _context.Members
-                .Include(m => m.Membership)
-                .FirstOrDefaultAsync(m => m.MemberID == id);
-        }
-
-        public async Task<Member> UpdateMemberAsync(Member member)
+        public async Task<bool> UpdateMemberAsync(Member member)
         {
             _context.Members.Update(member);
-            await _context.SaveChangesAsync();
-            return member;
+            return await _context.SaveChangesAsync() > 0;
         }
-
-        public async Task<Member> SoftDeleteMemberAsync(Member member)
+        public async Task<bool> SoftDeleteMemberAsync(Member member)
         {
             member.IsDeleted = true;
             _context.Members.Update(member);
-            await _context.SaveChangesAsync();
-            return member;
-
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }
+
 

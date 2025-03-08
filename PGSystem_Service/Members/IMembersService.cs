@@ -12,10 +12,10 @@ namespace PGSystem_Service.Members
     public interface IMembersService
     {
         Task<List<MemberResponse>> GetAllMembersAsync();
-        Task<MemberResponse> GetMemberByIdAsync(int id);
+        Task<MemberResponse> GetMemberByIdAsync(int memberId);
         Task<MemberResponse> RegisterMemberAsync(MemberRequest request);
-        Task<MemberResponse> UpdateMemberAsync(int id, MemberRequest request);
-        Task<bool> SoftDeleteMemberAsync(int id);
+        Task<bool> UpdateMemberAsync(int memberId, MemberRequest request);
+        Task<bool> DeleteMemberAsync(int memberId);
     }
 
 }
