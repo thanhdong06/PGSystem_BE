@@ -70,8 +70,13 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         private void MemberProfile()
         {
             CreateMap<Member, MemberResponse>()
-           .ForMember(dest => dest.MembershipName, opt => opt.MapFrom(src => src.Membership.Name))
-           .ForMember(dest => dest.Blogs, opt => opt.MapFrom(src => src.Blogs.Select(b => b.Title).ToList()));
+     .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName))
+     .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+     .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.User.Phone))
+     .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.User.CreateAt))
+     .ForMember(dest => dest.MembershipName, opt => opt.MapFrom(src => src.Membership.Name))
+     ;
         }
+
     }
 }

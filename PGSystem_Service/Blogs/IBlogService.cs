@@ -15,6 +15,6 @@ namespace PGSystem_Service.Blogs
         Task<bool> DeleteBlogsAsync(int bid);
         Task<IEnumerable<BlogResponse>> GetAllBlogByAID(int aid);
         Task<BlogResponse?> GetBlogByBIDAsync(int bid);
-        Task<BlogResponse?> UpdateBlogAsync(int bid, BlogRequest request);
+        Task<BlogResponse?> UpdateBlogAsync(int bid, BlogUpdateRequest request);
     }
 }

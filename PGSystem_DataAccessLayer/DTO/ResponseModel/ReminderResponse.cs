@@ -14,5 +14,7 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
         public DateTime DateTime { get; set; }
         public int SID { get; set; }
         public int MemberID { get; set; }
+       
+
     }
 }

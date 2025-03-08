@@ -10,13 +10,12 @@ namespace PGSystem_Repository.Members
 {
     public interface IMembersRepository
     {
+        Task<Member> GetMemberByUserIdAsync(int userId);
+        Task<Member> GetMemberByIdAsync(int memberId);
+        Task<Member> CreateMemberAsync(Member member);
         Task<List<Member>> GetAllMembersAsync();
-        Task<Member> GetByIdAsync(int id);
-        Task<Member> AddMemberAsync(Member member);
-        Task<Member> UpdateMemberAsync(Member member);
-
-        Task<Member> SoftDeleteMemberAsync(Member member);
-
+        Task<bool> UpdateMemberAsync(Member member);
+        Task<bool> SoftDeleteMemberAsync(Member member);
 
     }
 }

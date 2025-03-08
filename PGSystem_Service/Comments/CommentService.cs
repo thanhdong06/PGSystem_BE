@@ -66,7 +66,7 @@ namespace PGSystem_Service.Comments
             return _mapper.Map<CommentResponse>(comment);
         }
 
-        public async Task<CommentResponse?> UpdateCommentAsync(int cid, CommentRequest request)
+        public async Task<CommentResponse?> UpdateCommentAsync(int cid, CommentUpdateRequest request)
         {
             var comment = await _commentRepository.GetByIdAsync(cid);
             if (comment == null)

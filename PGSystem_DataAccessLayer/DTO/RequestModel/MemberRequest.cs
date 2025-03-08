@@ -8,7 +8,13 @@ namespace PGSystem_DataAccessLayer.DTO.RequestModel
 {
     public class MemberRequest
     {
-        public string MemberName { get; set; }
-        public int MembershipID { get; set; }
+
+
+        public int UID { get; set; }  // User ID của người đăng ký
+        public int MembershipID { get; set; } // ID của gói Membership muốn đăng ký
+
+
+       
     }
-}
+    }
+

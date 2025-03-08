@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PGSystem_DataAccessLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,24 +9,19 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
 {
     public class MemberResponse
     {
+
         public int MemberID { get; set; }
-
-        // Membership
-        public int MembershipID { get; set; }
+        public int UID { get; set; }
+        public User FullName { get; set; }
         public string MembershipName { get; set; }
-
-        // Blogs
-        public List<string> Blogs { get; set; }
-
-        // Comments
-        public List<string> Comments { get; set; }
-
-        // Reminders
-        public List<string> Reminders { get; set; }
-
-        // Pregnancy Record (Nếu có)
-        public string PregnancyRecord { get; set; }
+        
+        public User Phone { get; set; }
+        public User Email {  get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime CreateAt { get; set; }
+        
 
 
     }
-}
+
+    }

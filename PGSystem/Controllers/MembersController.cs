@@ -15,70 +15,171 @@ public class MembersController : Controller
     {
         _membersService = membersService;
     }
-  
 
-   
 
-    //    [HttpGet("{id}")]
-    //    public async Task<IActionResult> GetMemberById(int id)
-    //    {
-    //        try
-    //        {
-    //            var member = await _membersService.GetMemberByIdAsync(id);
-    //            return Ok(member);
-    //        }
-    //        catch (KeyNotFoundException ex)
-    //        {
-    //            return NotFound(new { message = ex.Message });
-    //        }
-    //    }
-    //[HttpPost("Register Member")]
-    //public async Task<IActionResult> RegisterMember([FromBody] MemberRequest request)
-    //{
-    //    try
-    //    {
-    //        var newMember = await _membersService.RegisterMemberAsync(request);
-    //        return CreatedAtAction(nameof(GetMemberById), new { id = newMember.MemberID }, newMember);
-    //    }
-    //    catch (KeyNotFoundException ex)
-    //    {
-    //        return NotFound(new { message = ex.Message });
-    //    }
-    //}
-
-    //[HttpPut("{id}")]
-    //public async Task<IActionResult> UpdateMember(int id, [FromBody] MemberRequest request)
-    //{
-    //    try
-    //    {
-    //        var updatedMember = await _membersService.UpdateMemberAsync(id, request);
-    //        return Ok(updatedMember);
-    //    }
-    //    catch (KeyNotFoundException ex)
-    //    {
-    //        return NotFound(new { message = ex.Message });
-    //    }
-    //}
-
-    [HttpDelete("SortDelete")]
-    public async Task<IActionResult> DeleteMembers(int id)
+    [HttpGet]
+    public async Task<IActionResult> GetAllMembers()
     {
         try
         {
-            await _membersService.SoftDeleteMemberAsync(id);
-            return NoContent();
+            var members = await _membersService.GetAllMembersAsync();
+            return Ok(members);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetMemberById(int id)
+    {
+        try
+        {
+            var member = await _membersService.GetMemberByIdAsync(id);
+            return Ok(member);
         }
         catch (KeyNotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
         }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
 
 
+    [HttpPost("addMembers")]
+    public async Task<IActionResult> RegisterMember([FromBody] MemberRequest request)
+    {
+        try
+        {
+            var result = await _membersService.RegisterMemberAsync(request);
+            return CreatedAtAction(nameof(RegisterMember), new { id = result.MemberID }, result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    } 
+    [HttpGet("update")]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateMember(int id, [FromBody] MemberRequest request)
+    {
+        try
+        {
+            var result = await _membersService.UpdateMemberAsync(id, request);
+            if (!result)
+            {
+                return StatusCode(500, "Update failed.");
+            }
 
+            return Ok("Member updated successfully.");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMember(int id)
+    {
+        try
+        {
+            var result = await _membersService.DeleteMemberAsync(id);
+            if (!result)
+            {
+                return StatusCode(500, "Failed to delete member.");
+            }
+
+            return Ok("Member deleted successfully.");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 
 }
+
+
+//    [HttpGet("{id}")]
+//    public async Task<IActionResult> GetMemberById(int id)
+//    {
+//        try
+//        {
+//            var member = await _membersService.GetMemberByIdAsync(id);
+//            return Ok(member);
+//        }
+//        catch (KeyNotFoundException ex)
+//        {
+//            return NotFound(new { message = ex.Message });
+//        }
+//    }
+//[HttpPost("Register Member")]
+//public async Task<IActionResult> RegisterMember([FromBody] MemberRequest request)
+//{
+//    try
+//    {
+//        var newMember = await _membersService.RegisterMemberAsync(request);
+//        return CreatedAtAction(nameof(GetMemberById), new { id = newMember.MemberID }, newMember);
+//    }
+//    catch (KeyNotFoundException ex)
+//    {
+//        return NotFound(new { message = ex.Message });
+//    }
+//}
+
+//[HttpPut("{id}")]
+//public async Task<IActionResult> UpdateMember(int id, [FromBody] MemberRequest request)
+//{
+//    try
+//    {
+//        var updatedMember = await _membersService.UpdateMemberAsync(id, request);
+//        return Ok(updatedMember);
+//    }
+//    catch (KeyNotFoundException ex)
+//    {
+//        return NotFound(new { message = ex.Message });
+//    }
+//}
+
+/* [HttpDelete("SortDelete")]
+ public async Task<IActionResult> DeleteMembers(int id)
+ {
+     try
+     {
+         await _membersService.SoftDeleteMemberAsync(id);
+         return NoContent();
+     }
+     catch (KeyNotFoundException ex)
+     {
+         return NotFound(new { message = ex.Message });
+     }
+ }
+*/
+
+
+
+
+
 
 
 

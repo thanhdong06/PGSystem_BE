@@ -65,7 +65,7 @@ namespace PGSystem_Service.Blogs
             }
             return _mapper.Map<BlogResponse>(blog);
         }
-        public async Task<BlogResponse?> UpdateBlogAsync(int bid, BlogRequest request)
+        public async Task<BlogResponse?> UpdateBlogAsync(int bid, BlogUpdateRequest  request)
         {
             var blog = await _blogRepository.GetByIdAsync(bid);
             if (blog == null)
