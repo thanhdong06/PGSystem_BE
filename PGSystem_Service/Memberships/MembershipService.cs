@@ -39,8 +39,8 @@ namespace PGSystem_Service.Memberships
 
         public async Task<string> RegisterMembershipAsync(RegisterMembershipRequest request)
         {
-            var userExists = await _authRepository.GetUserByIDAsync(request.UserId);
-            if (userExists == null)
+            var user = await _authRepository.GetUserByIDAsync(request.UserId);
+            if (user == null)
                 throw new Exception("User not found");
 
             var membership = await _membershipRepository.GetByIdAsync(request.MembershipId);
@@ -58,6 +58,7 @@ namespace PGSystem_Service.Memberships
                 IsDeleted = false
             };
 
+            user.Role = "Member";
             await _memberRepository.AddMemberAsync(member);
             return "Membership registered successfully!";
         }
