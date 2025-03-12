@@ -55,6 +55,20 @@ namespace PGSystem_Repository.Members
         //    _context.Members.Update(member);
         //    return await _context.SaveChangesAsync() > 0;
         //}
+        public async Task<Member> GetMemberShipIdByUserUIDAsync(int userUID)
+        {
+            return await _context.Members.FirstOrDefaultAsync(m => m.UserUID == userUID);
+        }
+
+        public async Task UpdateAsync(Member member)
+        {
+            _context.Members.Update(member);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
 

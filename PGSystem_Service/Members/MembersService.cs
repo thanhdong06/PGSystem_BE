@@ -116,7 +116,38 @@ namespace PGSystem_Service.Members
         //    // 2. Hủy tư cách thành viên (xóa mềm)
         //    return await _memberRepository.SoftDeleteMemberAsync(member);
         //}
-   
+
+
+        public async Task<MemberResponse> UpdateMembershipAsync(MemberShipUpdateRequest request)
+        {
+            var member = await _memberRepository.GetMemberShipIdByUserUIDAsync(request.UserUID);
+            if (member == null)
+            {
+                throw new KeyNotFoundException("Member not found.");
+            }
+
+            member.MembershipID = request.NewMembershipID;
+            await _memberRepository.UpdateAsync(member);
+            await _memberRepository.SaveChangesAsync();
+
+            return _mapper.Map<MemberResponse>(member);
+        }
+
+        public async Task<MemberResponse> DeleteMembershipAsync(int userUID)
+        {
+            var member = await _memberRepository.GetMemberShipIdByUserUIDAsync(userUID);
+            if (member == null)
+            {
+                throw new KeyNotFoundException("Member not found.");
+            }
+
+            member.MembershipID = 3;
+            await _memberRepository.UpdateAsync(member);
+            await _memberRepository.SaveChangesAsync();
+
+            return _mapper.Map<MemberResponse>(member);
+        }
+
     }
 }
     
