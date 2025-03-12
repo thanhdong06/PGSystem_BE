@@ -84,8 +84,16 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
 
         private void MemberResponseProfile()
         {
-            CreateMap<MemberShipUpdateRequest, Member>();
+
             CreateMap<Member, MemberResponse>();
+            CreateMap<MemberShipUpdateRequest, Member>()
+                 .ForMember(dest => dest.UserUID, opt => opt.MapFrom(src => src.UserUID))
+            .ForMember(dest => dest.MembershipID, opt => opt.MapFrom(src => src.NewMembershipID));
+
+            // Mapping từ Member sang MemberResponse
+            CreateMap<Member, MemberResponse>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserUID));
+
         }
     }
 }
