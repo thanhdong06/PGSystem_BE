@@ -18,6 +18,10 @@ namespace PGSystem_Repository.Members
         //Task<List<Member>> GetAllMembersAsync();
         //Task<bool> UpdateMemberAsync(Member member);
         //Task<bool> SoftDeleteMemberAsync(Member member);
+        Task<Member> GetMemberShipIdByUserUIDAsync(int userUID);
+        Task UpdateAsync(Member member);
+        Task SaveChangesAsync();
+    }
 
     }
-}
+
