@@ -17,5 +17,6 @@ namespace PGSystem_Repository.Users
         Task<User?> ValidateUser(string email, string password);
         Task<string> Register(RegisterRequest request);
         Task<User> LoginAsync(LoginRequest request);
+        Task<User> UpdateAsync(User user);
     }
 }

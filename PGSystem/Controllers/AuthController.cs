@@ -105,6 +105,17 @@ namespace PGSystem.Controllers
 
             var user = await _authService.CreateUser(email);
             return Ok(new { Message = "Login successful", User = user });
-        }  
+        }
+
+        [HttpPut("{uid}")]
+        public async Task<IActionResult> UpdateUser(int uid, [FromBody] UserUpdateRequest userUpdateRequest)
+        {
+            var updatedUser = await _authService.UpdateUserAsync(uid, userUpdateRequest);
+            if (updatedUser == null)
+            {
+                return NotFound("User does not exist..");
+            }
+            return Ok(updatedUser);
+        }
     }
 }
