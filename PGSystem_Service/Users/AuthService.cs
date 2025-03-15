@@ -153,5 +153,20 @@ namespace PGSystem_Service.Users
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+        public async Task<UserResponse?> UpdateUserAsync(int uid, UserUpdateRequest userUpdateRequest)
+        {
+            var user = await _authRepository.GetUserByIDAsync(uid);
+            if (user == null)
+            {
+                return null;
+            }
+
+            user.Phone = userUpdateRequest.Phone;
+            user.FullName = userUpdateRequest.FullName;
+            user.UpdateAt = DateTime.UtcNow;
+
+            var updatedUser = await _authRepository.UpdateAsync(user);
+            return _mapper.Map<UserResponse>(updatedUser);
+        }
     }
 }
