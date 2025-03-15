@@ -82,6 +82,10 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()) // Mặc định là false
                 .ForMember(dest => dest.User, opt => opt.Ignore()) // Không map User object
                 .ForMember(dest => dest.Membership, opt => opt.Ignore()); // Không map Membership object
+            CreateMap<Member, MemberResponse>()
+          .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.FullName))
+          
+          .ForMember(dest => dest.MembershipName, opt => opt.MapFrom(src => src.Membership.Name));
         }
 
         private void MemberResponseProfile()

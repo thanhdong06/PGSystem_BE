@@ -92,7 +92,14 @@ namespace PGSystem_Service.Admin
                 return _mapper.Map<MembershipResponse>(membership);
             }
 
+
+        public async Task<IEnumerable<MemberResponse>> GetAllMembersWithMembershipAsync()
+        {
+            var members = await _adminRepository.GetAllMembersWithMembershipAsync();
+            return _mapper.Map<IEnumerable<MemberResponse>>(members);
         }
+
+    }
     }
 
 

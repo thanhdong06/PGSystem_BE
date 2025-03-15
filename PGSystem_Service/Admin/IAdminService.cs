@@ -17,6 +17,7 @@ namespace PGSystem_Service.Admin
         Task<List<MembershipResponse>> GetAllMembershipsAsync();
         Task<bool> DeleteMembership(int MID);
         Task<MembershipResponse> UpdateMembershipAsync(int id, MembershipsRequest request);
+        Task<IEnumerable<MemberResponse>> GetAllMembersWithMembershipAsync();
 
     }
 }

@@ -83,5 +83,14 @@ using System.Threading.Tasks;
                 _context.Memberships.Update(membership);
                 await _context.SaveChangesAsync();
             }
+
+        public async Task<IEnumerable<Member>> GetAllMembersWithMembershipAsync()
+        {
+            return await _context.Members
+                .Include(m => m.User)
+                .Include(m => m.Membership)
+                .Where(m => m.MembershipID != 0) // Lọc những thành viên có Membership
+                .ToListAsync();
         }
+    }
     }
