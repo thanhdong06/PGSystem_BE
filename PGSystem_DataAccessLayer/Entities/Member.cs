@@ -28,5 +28,8 @@ namespace PGSystem_DataAccessLayer.Entities
         public PregnancyRecord PregnancyRecord { get; set; }
 
         public bool IsDeleted { get; set; }
+        public string Status { get; set; } = "Pending"; // Pending | Paid | Failed
+
+        public int OrderCode { get; set; }
     }
 }

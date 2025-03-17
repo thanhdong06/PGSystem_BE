@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Net.payOS.Types;
+using Net.payOS;
 using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
@@ -37,9 +39,9 @@ namespace PGSystem_Service.Memberships
             return _mapper.Map<List<MembershipResponse>>(memberships);
         }
 
-        public async Task<string> RegisterMembershipAsync(RegisterMembershipRequest request)
+        public async Task<Member> RegisterMembershipAsync(RegisterMembershipRequest request, int userId, int orderCode)
         {
-            var user = await _authRepository.GetUserByIDAsync(request.UserId);
+            var user = await _authRepository.GetUserByIDAsync(userId);
             if (user == null)
                 throw new Exception("User not found");
 
@@ -47,20 +49,21 @@ namespace PGSystem_Service.Memberships
             if (membership == null)
                 throw new Exception("Membership not found");
 
-            bool isAlreadyMember = await _memberRepository.ExistsByUserIdAsync(request.UserId);
+            bool isAlreadyMember = await _memberRepository.ExistsByUserIdAsync(userId);
             if (isAlreadyMember)
                 throw new Exception("User is already a member!");
 
             var member = new Member
             {
-                UserUID = request.UserId,
+                UserUID = userId,
                 MembershipID = request.MembershipId,
+                Status = "Pending",
+                OrderCode = orderCode,
                 IsDeleted = false
             };
 
-            user.Role = "Member";
             await _memberRepository.AddMemberAsync(member);
-            return "Membership registered successfully!";
+            return member;
         }
     }
 }
