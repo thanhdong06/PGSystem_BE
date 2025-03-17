@@ -39,20 +39,20 @@ namespace PGSystem.Configuration
             services.AddAuthorization();
         }
 
-        public static void AddGoogleAuthentication(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-            }).AddCookie()
-              .AddGoogle(googleOptions =>
-                {
-                    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-                    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-                    googleOptions.CallbackPath = "/signin-google"; // Đường dẫn callback
-             });
-        }
+        //public static void AddGoogleAuthentication(this IServiceCollection services, IConfiguration configuration)
+        //{
+        //    services.AddAuthentication(options =>
+        //    {
+        //        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        //        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        //        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+        //    }).AddCookie()
+        //      .AddGoogle(googleOptions =>
+        //        {
+        //            googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+        //            googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+        //            googleOptions.CallbackPath = "/signin-google"; // Đường dẫn callback
+        //     });
+        //}
     }
 }

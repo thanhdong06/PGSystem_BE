@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PGSystem_Service.Memberships
 {
@@ -65,5 +66,20 @@ namespace PGSystem_Service.Memberships
             await _memberRepository.AddMemberAsync(member);
             return member;
         }
+
+        public async Task<bool> ConfirmMembershipPayment(int orderCode)
+        {
+            var member = await _memberRepository.GetByOrderCodeAsync(orderCode);
+            if (member == null)
+            {
+                throw new Exception("Membership not found for this order");
+            }
+
+            member.Status = "Paid";
+
+            await _memberRepository.UpdateAsync(member);
+            return true;
+        }
+
     }
 }
