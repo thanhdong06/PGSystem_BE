@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PGSystem_DataAccessLayer.DBContext;
 
@@ -11,9 +12,11 @@ using PGSystem_DataAccessLayer.DBContext;
 namespace PGSystem_DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250317205254_UpdateMembershipPrice")]
+    partial class UpdateMembershipPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,13 +188,6 @@ namespace PGSystem_DataAccessLayer.Migrations
 
                     b.Property<int>("MembershipID")
                         .HasColumnType("int");
-
-                    b.Property<int>("OrderCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserUID")
                         .HasColumnType("int");
@@ -401,7 +397,7 @@ namespace PGSystem_DataAccessLayer.Migrations
                             Password = "12345",
                             Phone = "0123456789",
                             Role = "Admin",
-                            UpdateAt = new DateTime(2025, 3, 18, 5, 12, 40, 961, DateTimeKind.Local).AddTicks(7635)
+                            UpdateAt = new DateTime(2025, 3, 18, 3, 52, 53, 571, DateTimeKind.Local).AddTicks(9509)
                         });
                 });
 

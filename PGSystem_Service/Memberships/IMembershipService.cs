@@ -1,5 +1,6 @@
 ﻿using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
+using PGSystem_DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace PGSystem_Service.Memberships
     public interface IMembershipService
     {
         Task<List<MembershipResponse>> GetAllMembershipsAsync();
-        Task<string> RegisterMembershipAsync(RegisterMembershipRequest request);
+        Task<Member> RegisterMembershipAsync(RegisterMembershipRequest request, int userId, int orderCode);
+        Task<bool> ConfirmMembershipPayment(int orderCode);
     }
 }

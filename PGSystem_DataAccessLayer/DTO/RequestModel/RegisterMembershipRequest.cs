@@ -8,7 +8,6 @@ namespace PGSystem_DataAccessLayer.DTO.RequestModel
 {
     public class RegisterMembershipRequest
     {
-        public int UserId { get; set; }
         public int MembershipId { get; set; }
     }
 }
