@@ -118,5 +118,12 @@ namespace PGSystem.Controllers
             }
         }
 
+        [HttpGet("with-membership")]
+        public async Task<IActionResult> GetMembersWithMembership()
+        {
+            var members = await _adminService.GetAllMembersWithMembershipAsync();
+            return Ok(members);
+        }
+
     }
 }

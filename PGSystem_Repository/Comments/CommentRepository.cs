@@ -40,6 +40,8 @@ namespace PGSystem_Repository.Comments
         public async Task<IEnumerable<Comment>> GetAllAsync()
         {
             return await _context.Comments
+                .Include(c=> c.Member)
+                .ThenInclude(m=>m.User)
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
         }

@@ -12,5 +12,15 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
         public int MemberID { get; set; }
         public int UserId { get; set; }
         public int MembershipId { get; set; }
+
+
+
+        //
+
+        public string UserName { get; set; }
+        
+       
+        public string MembershipName { get; set; }  // Thêm thông tin Membership
+        public bool IsDeleted { get; set; }
     }
 }
