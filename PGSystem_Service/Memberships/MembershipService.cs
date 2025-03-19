@@ -78,6 +78,14 @@ namespace PGSystem_Service.Memberships
             member.Status = "Paid";
 
             await _memberRepository.UpdateAsync(member);
+            var user = await _authRepository.GetUserByIDAsync(member.UserUID);
+            if (user == null)
+            {
+                throw new Exception("User not found for this membership");
+            }
+
+            user.Role = "Member";
+            await _authRepository.UpdateAsync(user);
             return true;
         }
 
