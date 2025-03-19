@@ -88,5 +88,11 @@ namespace PGSystem_Repository.Users
             if (samePassword) { return user; }
             throw new Exception("Wrong Email Or Password");
         }
+        public async Task<User> UpdateAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
     }
 }

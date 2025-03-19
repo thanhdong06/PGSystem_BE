@@ -36,6 +36,7 @@ namespace PGSystem_Repository.Blogs
         {
             {
                 return await _context.Blogs
+                    .Include(b => b.Member).ThenInclude(m=>m.User)
             .Where(b => !b.IsDeleted)
             .ToListAsync();
             }

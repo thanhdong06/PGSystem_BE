@@ -58,15 +58,17 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CreateMap<ReminderRequest, Reminder>();
             CreateMap<Reminder, ReminderResponse>();
         }
-        private void BlogMappingProfile()
+        public void BlogMappingProfile()
         {
-            CreateMap<BlogRequest, Blog>();
-            CreateMap<Blog, BlogResponse>();
+            CreateMap<User, UserBlog>();
+            CreateMap<Blog, BlogResponse>()
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.Member.User));
         }
-        private void CommentMappingProfile()
+        public void CommentMappingProfile()
         {
-            CreateMap<CommentRequest, Comment>();
-            CreateMap<Comment, CommentResponse>();
+            CreateMap<User, UserComment>();
+            CreateMap<Comment, CommentResponse>()
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.Member.User));
         }
         private void MemberMappingProfile()
         {
@@ -80,6 +82,10 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()) // Mặc định là false
                 .ForMember(dest => dest.User, opt => opt.Ignore()) // Không map User object
                 .ForMember(dest => dest.Membership, opt => opt.Ignore()); // Không map Membership object
+            CreateMap<Member, MemberResponse>()
+          .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.FullName))
+          
+          .ForMember(dest => dest.MembershipName, opt => opt.MapFrom(src => src.Membership.Name));
         }
 
         private void MemberResponseProfile()
