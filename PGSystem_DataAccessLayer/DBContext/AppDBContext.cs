@@ -89,7 +89,7 @@ namespace PGSystem_DataAccessLayer.DBContext
                 .HasKey(c => c.CID);
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Blog)
-                .WithMany()
+                .WithMany(b => b.Comments)
                 .HasForeignKey(c => c.BID)
                 .OnDelete(DeleteBehavior.Restrict);
 

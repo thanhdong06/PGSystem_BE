@@ -97,14 +97,14 @@ namespace PGSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateMembership/{id}")]
         public async Task<IActionResult> UpdateMembership(int id, [FromBody] MembershipsRequest request)
         {
             var updatedMembership = await _adminService.UpdateMembershipAsync(id, request);
             return Ok(updatedMembership);
         }
 
-        [HttpPost("Create")]
+        [HttpPost("CreateMembership")]
         public async Task<ActionResult<JsonResponse<string>>> CreateMembership([FromBody] MembershipsRequest request)
         {
             try

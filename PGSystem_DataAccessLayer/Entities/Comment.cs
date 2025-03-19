@@ -16,7 +16,11 @@ namespace PGSystem_DataAccessLayer.Entities
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public int MemberID { get; set; }
+
+        [ForeignKey("BID")]
         public Blog Blog { get; set; }
+
+        [ForeignKey("MemberID")]
         public Member Member { get; set; }
         public bool IsDeleted { get; set; }
     }

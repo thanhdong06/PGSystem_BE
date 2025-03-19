@@ -80,8 +80,8 @@ namespace PGSystem.Controllers
                     amount: amountInInt,
                     description: "Thanh toán Membership",
                     items: [],
-                    returnUrl: "http://localhost:3039/payment-successfully",
-                    cancelUrl: "http://localhost:3039/payment-cancel"
+                    returnUrl: "http://localhost:5173/payment-successfully",
+                    cancelUrl: "http://localhost:5173/payment-cancel"
                 );
                 var response = await payOS.createPaymentLink(paymentLinkRequest);
 
