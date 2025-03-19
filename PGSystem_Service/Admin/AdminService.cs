@@ -35,6 +35,7 @@ namespace PGSystem_Service.Admin
                 return users.Select(u => new UserResponse
                 {
                     UID = u.UID,
+                    FullName = u.FullName,
                     Email = u.Email,
                     Phone = u.Phone,
                     Role = u.Role
