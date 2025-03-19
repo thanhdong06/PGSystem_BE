@@ -30,7 +30,7 @@ namespace PGSystem_Service.Reminders
         {
             var entity = _mapper.Map<Reminder>(request);
             entity.Title = request.Title;
-            entity.Description = request.Description;
+            //entity.Description = request.Description;
             entity.DateTime = request.DateTime;
             entity.SID = 1;
             entity.CreateAt = entity.UpdateAt = DateTime.UtcNow;
@@ -50,7 +50,7 @@ namespace PGSystem_Service.Reminders
 
             // Cập nhật thông tin
             reminder.Title = request.Title;
-            reminder.Description = request.Description;
+            //reminder.Description = request.Description;
             reminder.DateTime = request.DateTime;
             reminder.SID = 1;
             reminder.UpdateAt = DateTime.UtcNow;
