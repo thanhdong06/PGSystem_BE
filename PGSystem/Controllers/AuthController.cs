@@ -82,30 +82,28 @@ namespace PGSystem.Controllers
             }
         }
 
-        [HttpGet("login-google")]
-        public IActionResult LoginWithGoogle()
-        {
-            var properties = new AuthenticationProperties { RedirectUri = "/api/auth/google-callback" };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
-        }
+        //[HttpGet("login-google")]
+        //public IActionResult LoginWithGoogle()
+        //{
+        //    var properties = new AuthenticationProperties { RedirectUri = "/api/auth/google-callback" };
+        //    return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        //}
 
-        [HttpGet("google-callback")]
-        public async Task<IActionResult> GoogleCallback()
-        {
-            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //[HttpGet("google-callback")]
+        //public async Task<IActionResult> GoogleCallback()
+        //{
+        //    var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            if (!authenticateResult.Succeeded)
-                return BadRequest("Google Authentication Failed");
+        //    if (!authenticateResult.Succeeded)
+        //        return BadRequest("Google Authentication Failed");
 
-            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
-            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        //    var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
+        //    var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-            if (string.IsNullOrEmpty(email))
-                return BadRequest("Email not found");
+        //    if (string.IsNullOrEmpty(email))
+        //        return BadRequest("Email not found");
 
-            var user = await _authService.CreateUser(email);
-            return Ok(new { Message = "Login successful", User = user });
-        }
+
 
         [HttpPut("{uid}")]
         public async Task<IActionResult> UpdateUser(int uid, [FromBody] UserUpdateRequest userUpdateRequest)
@@ -116,6 +114,19 @@ namespace PGSystem.Controllers
                 return NotFound("User does not exist..");
             }
             return Ok(updatedUser);
+        }
+
+        [HttpGet("{uid}")]
+        public async Task<IActionResult> GetUserById(int uid)
+        {
+            var user = await _authService.GetUserByIdAsync(uid);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User does not exist.." });
+            }
+
+            return Ok(user);
         }
     }
 }

@@ -168,5 +168,11 @@ namespace PGSystem_Service.Users
             var updatedUser = await _authRepository.UpdateAsync(user);
             return _mapper.Map<UserResponse>(updatedUser);
         }
+
+        public async Task<UserResponse> GetUserByIdAsync(int uid)
+        {
+            var user = await _authRepository.GetUserByIDAsync(uid);
+            return _mapper.Map<UserResponse>(user);
+        }
     }
 }

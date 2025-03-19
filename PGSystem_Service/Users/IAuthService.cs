@@ -15,5 +15,6 @@ namespace PGSystem_Service.Users
         Task<LoginResponse> LoginAsync(LoginRequest request);
         Task<string> RefreshTokenAsync(string refreshToken);
         Task<UserResponse?> UpdateUserAsync(int uid, UserUpdateRequest requestUpdate);
+        Task<UserResponse> GetUserByIdAsync(int uid);
     }
 }

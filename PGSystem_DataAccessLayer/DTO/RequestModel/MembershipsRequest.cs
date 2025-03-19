@@ -16,7 +16,7 @@ namespace PGSystem_DataAccessLayer.DTO.RequestModel
 
         [Required(ErrorMessage = "Package price cannot be left blank.")]
         [Range(0, double.MaxValue, ErrorMessage = "Price must be positive.")]
-        public decimal Price { get; set; }
+        public int Price { get; set; }
         
 
     }

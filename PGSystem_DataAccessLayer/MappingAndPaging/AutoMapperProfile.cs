@@ -58,15 +58,17 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CreateMap<ReminderRequest, Reminder>();
             CreateMap<Reminder, ReminderResponse>();
         }
-        private void BlogMappingProfile()
+        public void BlogMappingProfile()
         {
-            CreateMap<BlogRequest, Blog>();
-            CreateMap<Blog, BlogResponse>();
+            CreateMap<User, UserBlog>();
+            CreateMap<Blog, BlogResponse>()
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.Member.User));
         }
-        private void CommentMappingProfile()
+        public void CommentMappingProfile()
         {
-            CreateMap<CommentRequest, Comment>();
-            CreateMap<Comment, CommentResponse>();
+            CreateMap<User, UserComment>();
+            CreateMap<Comment, CommentResponse>()
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.Member.User));
         }
         private void MemberMappingProfile()
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PGSystem_DataAccessLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,12 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
         public string? Type { get; set; }
         public int AID { get; set; }
 
+        public UserBlog User { get; set; }
+
+    }
+    public class UserBlog
+    {
+        public int UID { get; set; }
+        public string FullName { get; set; }
     }
 }

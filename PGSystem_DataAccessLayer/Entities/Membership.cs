@@ -11,7 +11,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public int MID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal Price { get; set; }
+        public int Price { get; set; }
         public bool IsDeleted { get; set; }
         public ICollection<Member> Members { get; set; }
 

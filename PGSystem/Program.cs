@@ -17,13 +17,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerService();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddGoogleAuthentication(builder.Configuration);
+//builder.Services.AddGoogleAuthentication(builder.Configuration);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
     builder =>
     {
-        builder.WithOrigins("*")
+        builder.AllowAnyOrigin()
                .AllowAnyHeader()
                .AllowAnyMethod();
     });

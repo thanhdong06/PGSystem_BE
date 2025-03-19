@@ -59,10 +59,17 @@ namespace PGSystem_Repository.Members
         {
             return await _context.Members.FirstOrDefaultAsync(m => m.UserUID == userUID);
         }
+        public async Task<Member> GetByOrderCodeAsync(int orderCode)
+        {
+            return await _context.Members
+                .Include(m => m.Membership)
+                .FirstOrDefaultAsync(m => m.OrderCode == orderCode);
+        }
 
         public async Task UpdateAsync(Member member)
         {
             _context.Members.Update(member);
+            await _context.SaveChangesAsync();
         }
 
         public async Task SaveChangesAsync()
