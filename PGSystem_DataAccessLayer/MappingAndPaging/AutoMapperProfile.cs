@@ -82,7 +82,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
                 .ForMember(dest => dest.Membership, opt => opt.Ignore()); // Không map Membership object
             CreateMap<Member, MemberResponse>()
           .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.FullName))
-          
+
           .ForMember(dest => dest.MembershipName, opt => opt.MapFrom(src => src.Membership.Name));
         }
 
