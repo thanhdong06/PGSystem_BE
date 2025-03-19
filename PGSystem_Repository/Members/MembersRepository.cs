@@ -76,6 +76,13 @@ namespace PGSystem_Repository.Members
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<Member> GetMemberByIdAsync(int memberId)
+        {
+            return await _context.Members
+                .Include(m => m.User)
+                .Include(m => m.Membership)
+                .FirstOrDefaultAsync(m => m.MemberID == memberId);
+        }
     }
 }
 

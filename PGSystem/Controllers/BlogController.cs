@@ -2,6 +2,7 @@
 using PGSystem.ResponseType;
 using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
+using PGSystem_DataAccessLayer.Entities;
 using PGSystem_Service.Blogs;
 
 
@@ -24,34 +25,27 @@ namespace PGSystem.Controllers
             return Ok(blogs);
         }
 
-        [HttpPost("Create")]
+        [HttpPost]
         public async Task<IActionResult> CreateBlog([FromBody] BlogRequest request)
         {
-            if (request == null)
+            try
             {
-                return BadRequest("Invalid Data");
+                var blog = await _blogService.CreateBlogAsync(request);
+                return CreatedAtAction(nameof(CreateBlog), new { id = blog.BID }, blog);
             }
-
-            var createdBlog = await _blogService.CreateBlogAsync(request);
-            return Ok(createdBlog);
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
         [HttpDelete]
         public async Task<ActionResult<JsonResponse<string>>> DeleteBlog(int bid)
         {
-            try
             {
-                var isDeleted = await _blogService.DeleteBlogsAsync(bid);
+                var result = await _blogService.DeleteBlogsAsync(bid);
+                if (!result) return NotFound(new { message = "Blog does not exist!" });
 
-                if (!isDeleted)
-                {
-                    return NotFound(new JsonResponse<string>(null, 404, "blog not found"));
-                }
-
-                return Ok(new JsonResponse<string>(null, 200, "Blog deleted successfully"));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the blog"));
+                return Ok(new { message = "Blog and all comments have been deleted" });
             }
         }
         [HttpGet("GetAllByAuthor/{aid}")]
