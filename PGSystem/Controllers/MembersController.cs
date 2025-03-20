@@ -136,7 +136,7 @@ namespace PGSystem.Controllers
             }
         }
 
-        [HttpDelete("delete-membership/{userUID}")]
+       /* [HttpDelete("delete-membership/{userUID}")]
         public async Task<IActionResult> SetMembershipToThree(int userUID)
         {
             try
@@ -152,6 +152,14 @@ namespace PGSystem.Controllers
             {
                 return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
             }
+        }*/
+
+        [HttpDelete("{id} MembersToUser")]
+        public async Task<IActionResult> DeleteMember(int id)
+        {
+            var request = new DeleteMemberRequest { MemberID = id };
+            var response = await _membersService.DeleteMemberAsync(request);
+            return Ok(response);
         }
     }
 }

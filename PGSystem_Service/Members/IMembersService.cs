@@ -19,7 +19,8 @@ namespace PGSystem_Service.Members
 
 
         Task<MemberResponse> UpdateMembershipAsync(MemberShipUpdateRequest request);
-        Task<MemberResponse> DeleteMembershipAsync(int userUID);
+       // Task<MemberResponse> DeleteMembershipAsync(int userUID);
+        Task<DeleteMemberResponse> DeleteMemberAsync(DeleteMemberRequest request);
     }
 
 }
