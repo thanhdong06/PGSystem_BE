@@ -11,7 +11,7 @@ namespace PGSystem_Repository.Reminders
     {
         Task<IEnumerable<Reminder>> GetAllAsync();
         Task<Reminder> GetReminderByRID(int rid);
-        Task<Reminder> CreateRemindersAsync(Reminder entity);
+        Task<Reminder> CreateReminderAsync(Reminder reminder);
         Task<bool> DeleteReminders(int rid);
         Task UpdateAsync(Reminder reminder);
         Task SaveChangesAsync();
