@@ -115,5 +115,18 @@ namespace PGSystem.Controllers
             }
             return Ok(updatedUser);
         }
+
+        [HttpGet("{uid}")]
+        public async Task<IActionResult> GetUserById(int uid)
+        {
+            var user = await _authService.GetUserByIdAsync(uid);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User does not exist.." });
+            }
+
+            return Ok(user);
+        }
     }
 }

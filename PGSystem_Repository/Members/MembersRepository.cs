@@ -72,11 +72,34 @@ namespace PGSystem_Repository.Members
             await _context.SaveChangesAsync();
         }
 
+
+        public async Task<Member> GetMemberByIdAsync(int memberId)
+        {
+            return await _context.Members
+                .Include(m => m.User)
+                .Include(m => m.Membership)
+                .FirstOrDefaultAsync(m => m.MemberID == memberId);
+
+
+
+        }
+
+
+        public async Task DeleteMemberAsync(Member member)
+        {
+            _context.Members.Remove(member);
+
+            // Cập nhật role của User thành "User"
+            var user = member.User;
+            if (user != null)
+            {
+                user.Role = "User";
+
+            }
+        }
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
     }
 }
-
-

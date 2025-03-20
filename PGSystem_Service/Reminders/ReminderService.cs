@@ -28,19 +28,33 @@ namespace PGSystem_Service.Reminders
         }
         public async Task<ReminderResponse> CreateReminderAsync(ReminderRequest request)
         {
-            var entity = _mapper.Map<Reminder>(request);
-            entity.Title = request.Title;
-            entity.Description = request.Description;
-            entity.DateTime = request.DateTime;
-            entity.SID = 1;
-            entity.CreateAt = entity.UpdateAt = DateTime.UtcNow;
+            var newReminder = new Reminder
+            {
+                Title = request.Title,
+                //Description = request.Description,
+                DateTime = request.DateTime,
+                SID = 1,
+                MemberID = request.MemberID,
+                CreateAt = DateTime.UtcNow,
+                UpdateAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
 
-            var createdReminder = await _reminderRepository.CreateRemindersAsync(entity);
+            var createdReminder = await _reminderRepository.CreateReminderAsync(newReminder);
 
-            return _mapper.Map<ReminderResponse>(createdReminder);
+            return new ReminderResponse
+            {
+                RID = createdReminder.RID,
+                Title = createdReminder.Title,
+                //Description = createdReminder.Description,
+                DateTime = createdReminder.DateTime,
+                //SID = createdReminder.SID,
+                MemberID = createdReminder.MemberID,
+                //IsDeleted = createdReminder.IsDeleted
+            };
         }
 
-        public async Task<ReminderResponse?> UpdateReminderAsync(int rid, ReminderRequest request)
+        public async Task<ReminderResponse?> UpdateReminderAsync(int rid, ReminderUpdateRequest request)
         {
             var reminder = await _reminderRepository.GetReminderByRID(rid);
             if (reminder == null)
@@ -50,7 +64,7 @@ namespace PGSystem_Service.Reminders
 
             // Cập nhật thông tin
             reminder.Title = request.Title;
-            reminder.Description = request.Description;
+            //reminder.Description = request.Description;
             reminder.DateTime = request.DateTime;
             reminder.SID = 1;
             reminder.UpdateAt = DateTime.UtcNow;

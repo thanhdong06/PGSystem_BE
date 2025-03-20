@@ -3,6 +3,7 @@ using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
 using PGSystem_Repository.Blogs;
+using PGSystem_Repository.Members;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,29 +16,42 @@ namespace PGSystem_Service.Blogs
     {
         private readonly IBlogRepository _blogRepository;
         private readonly IMapper _mapper;
+        private readonly IMembersRepository _membersRepository;
 
-        public BlogService(IBlogRepository blogRepository, IMapper mapper)
+        public BlogService(IBlogRepository blogRepository, IMapper mapper, IMembersRepository membersRepository)
         {
+            _membersRepository = membersRepository;
             _blogRepository = blogRepository;
             _mapper = mapper;
         }
         public async Task<BlogResponse> CreateBlogAsync(BlogRequest request)
         {
+            var member = await _membersRepository.GetMemberByIdAsync(request.AID);
+            if (member == null) throw new Exception("Member is not exist");
+
             var newBlog = new Blog
             {
                 Title = request.Title,
                 Content = request.Content,
                 Type = request.Type,
-                AID = request.AID,
+                Member = member,
                 CreateAt = DateTime.UtcNow,
                 UpdateAt = DateTime.UtcNow,
                 IsDeleted = false
             };
 
-            await _blogRepository.CreateBlogsAsync(newBlog);
-            await _blogRepository.SaveChangesAsync();
+            var createdBlog = await _blogRepository.CreateBlogsAsync(newBlog);
 
-            return _mapper.Map<BlogResponse>(newBlog);
+            return new BlogResponse
+            {
+                BID = createdBlog.BID,
+                Title = createdBlog.Title,
+                Content = createdBlog.Content,
+                Type = createdBlog.Type,
+                CreateAt = createdBlog.CreateAt,
+                UpdateAt = createdBlog.UpdateAt,
+                AID = createdBlog.Member.MemberID
+            };
         }
 
         public async Task<bool> DeleteBlogsAsync(int bid)

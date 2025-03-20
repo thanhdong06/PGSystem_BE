@@ -38,22 +38,18 @@ namespace PGSystem.Controllers
         //    return Ok(new JsonResponse<List<ReminderResponse>>(reminders, StatusCodes.Status200OK, "Reminder list retrieved successfully"));
         //}
 
-        [HttpPost("Create")]
-        public async Task<ActionResult<JsonResponse<string>>> CreateReminders([FromBody] ReminderRequest request)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateReminder([FromBody] ReminderRequest request)
         {
-            try
-            {
-                await _reminderService.CreateReminderAsync(request);
-                return Ok(new JsonResponse<string>(null, 200, "Reminder created successfully"));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new JsonResponse<string>("Something went wrong, please contact the admin", 400, ex.Message));
-            }
+            if (request == null)
+                return BadRequest(new { message = "Data invalid" });
+
+            var reminder = await _reminderService.CreateReminderAsync(request);
+            return Ok(reminder);
         }
 
         [HttpPut("{rid}")]
-        public async Task<IActionResult> UpdateReminder(int rid, [FromBody] ReminderRequest request)
+        public async Task<IActionResult> UpdateReminder(int rid, [FromBody] ReminderUpdateRequest request)
         {
             if (request == null)
             {
