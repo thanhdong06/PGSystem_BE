@@ -17,9 +17,10 @@ namespace PGSystem_Repository.Comments
         {
             _context = context;
         }
-        public async Task<Comment> CreateAsync(Comment comment)
+        public async Task<Comment> CreateCommentAsync(Comment comment)
         {
-            await _context.Comments.AddAsync(comment);
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
             return comment;
         }
 
@@ -49,13 +50,14 @@ namespace PGSystem_Repository.Comments
         public async Task<IEnumerable<Comment>> GetAllByBIDAsync(int bid)
         {
             return await _context.Comments
+                .Include(c=> c.Member).ThenInclude(m=>m.User)
                 .Where(c => c.BID == bid && !c.IsDeleted)
                 .ToListAsync();
         }
         public async Task<Comment?> GetByIdAsync(int cid)
         {
             return await _context.Comments
-                .Include(c => c.Member) // Nếu cần lấy thông tin Member
+                .Include(c => c.Member).ThenInclude(m => m.User) // Nếu cần lấy thông tin Member
                 .Include(c => c.Blog)   // Nếu cần lấy thông tin Blog
                 .FirstOrDefaultAsync(c => c.CID == cid && !c.IsDeleted);
         }

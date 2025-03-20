@@ -20,15 +20,22 @@ namespace PGSystem_Repository.Blogs
        
         public async Task<bool> DeleteBlogs(int bid)
         {
-            var blog = await _context.Blogs.FirstOrDefaultAsync(b => b.BID == bid && !b.IsDeleted);
+            var blog = await _context.Blogs
+            .Include(b => b.Comments)
+            .FirstOrDefaultAsync(b => b.BID == bid);
 
-            if (blog == null)
-            {
-                return false;
-            }
+            if (blog == null) return false;
+
+            // Cập nhật trạng thái IsDeleted của Blog
             blog.IsDeleted = true;
-            await _context.SaveChangesAsync();
 
+            // Cập nhật trạng thái IsDeleted của tất cả Comment liên quan
+            foreach (var comment in blog.Comments)
+            {
+                comment.IsDeleted = true;
+            }
+
+            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -51,7 +58,7 @@ namespace PGSystem_Repository.Blogs
         public async Task<Blog?> GetByIdAsync(int bid)
         {
             return await _context.Blogs
-                .Include(b => b.Member)
+                .Include(b => b.Member).ThenInclude(m=> m.User)
                 .FirstOrDefaultAsync(b => b.BID == bid && !b.IsDeleted);
         }
         public async Task UpdateAsync(Blog blog)
@@ -66,7 +73,8 @@ namespace PGSystem_Repository.Blogs
 
         public async Task<Blog> CreateBlogsAsync(Blog blog)
         {
-            await _context.Blogs.AddAsync(blog);
+            _context.Blogs.Add(blog);
+            await _context.SaveChangesAsync();
             return blog;
         }
     }

@@ -24,11 +24,11 @@ namespace PGSystem_Repository.Reminders
                 .Where(r => !r.IsDeleted)
                 .ToListAsync();
         }
-        public async Task<Reminder> CreateRemindersAsync(Reminder entity)
+        public async Task<Reminder> CreateReminderAsync(Reminder reminder)
         {
-            _context.Reminders.Add(entity);
+            _context.Reminders.Add(reminder);
             await _context.SaveChangesAsync();
-            return entity;
+            return reminder;
         }
 
         public async Task<Reminder> GetReminderByRID(int rid)

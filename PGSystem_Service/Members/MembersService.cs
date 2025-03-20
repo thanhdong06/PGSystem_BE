@@ -133,7 +133,7 @@ namespace PGSystem_Service.Members
             return _mapper.Map<MemberResponse>(member);
         }
 
-        public async Task<MemberResponse> DeleteMembershipAsync(int userUID)
+       /* public async Task<MemberResponse> DeleteMembershipAsync(int userUID)
         {
             var member = await _memberRepository.GetMemberShipIdByUserUIDAsync(userUID);
             if (member == null)
@@ -146,8 +146,21 @@ namespace PGSystem_Service.Members
             await _memberRepository.SaveChangesAsync();
 
             return _mapper.Map<MemberResponse>(member);
-        }
+        }*/
 
+        public async Task<DeleteMemberResponse> DeleteMemberAsync(DeleteMemberRequest request)
+        {
+            var member = await _memberRepository.GetMemberByIdAsync(request.MemberID);
+            if (member == null)
+            {
+                throw new KeyNotFoundException("Member not found");
+            }
+
+            await _memberRepository.DeleteMemberAsync(member);
+            await _memberRepository.SaveChangesAsync();
+
+            return _mapper.Map<DeleteMemberResponse>(member);
+        }
     }
 }
     
