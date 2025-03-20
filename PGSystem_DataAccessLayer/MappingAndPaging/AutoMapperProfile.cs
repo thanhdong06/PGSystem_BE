@@ -23,6 +23,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CommentMappingProfile();
             MemberMappingProfile();
             MemberResponseProfile();
+            MembertoUserProfile();
         }
         private void UserMappingProfile()
         {
@@ -100,6 +101,13 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CreateMap<Member, MemberResponse>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserUID));
 
+        }
+
+        private void MembertoUserProfile()
+        {
+            CreateMap<Member, DeleteMemberResponse>()
+                .ForMember(dest => dest.UserUID, opt => opt.MapFrom(src => src.UserUID))
+                .ForMember(dest => dest.Message, opt => opt.MapFrom(src => "Member successfully deleted and converted to User"));
         }
     }
 }
