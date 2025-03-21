@@ -1,4 +1,5 @@
-﻿using PGSystem_DataAccessLayer.DBContext;
+﻿using Microsoft.EntityFrameworkCore;
+using PGSystem_DataAccessLayer.DBContext;
 using PGSystem_DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,17 @@ namespace PGSystem_Repository.PregnancyRecords
             await _context.SaveChangesAsync();
             return entity;
         }
+
+        public async Task<List<PregnancyRecord>> GetPregnancyRecordByMemberIDAsync(int memberId)
+        {
+            return await _context.PregnancyRecords
+                .Where(r => r.MemberMemberID == memberId)
+                .ToListAsync();
+        }
+        public void Delete(List<PregnancyRecord> pregnancyRecords)
+        {
+            _context.PregnancyRecords.RemoveRange(pregnancyRecords);
+        }
+
     }
 }

@@ -154,7 +154,7 @@ namespace PGSystem.Controllers
             }
         }*/
 
-        [HttpDelete("{id} MembersToUser")]
+        [HttpDelete("MembersToUser")]
         public async Task<IActionResult> DeleteMember(int id)
         {
             var request = new DeleteMemberRequest { MemberID = id };
