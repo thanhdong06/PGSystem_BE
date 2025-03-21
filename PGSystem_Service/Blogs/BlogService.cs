@@ -28,14 +28,19 @@ namespace PGSystem_Service.Blogs
         }
         public async Task<BlogResponse> CreateBlogAsync(BlogRequest request, ClaimsPrincipal user)
         {
-            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
+            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
                 throw new UnauthorizedAccessException("User is not authenticated");
+
+            if (!int.TryParse(userIdClaim, out int userId))
+                throw new Exception("Invalid user ID format");
 
             var member = await _membersRepository.GetMemberByIdAsync(userId);
             if (member == null)
                 throw new Exception("Member does not exist");
 
+            if (member.Status != "Paid")
+                throw new UnauthorizedAccessException("Only paid members can create blogs");
             var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
             if (string.IsNullOrEmpty(userRole) || userRole != "Member")
                 throw new UnauthorizedAccessException("Only members can create blogs");
@@ -47,8 +52,8 @@ namespace PGSystem_Service.Blogs
                 Type = request.Type,
                 Member = member,
                 AID = member.MemberID,
-                CreateAt = DateTime.UtcNow,
-                UpdateAt = DateTime.UtcNow,
+                CreateAt = DateTime.Now,
+                UpdateAt = DateTime.Now,
                 IsDeleted = false
             };
 

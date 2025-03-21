@@ -14,5 +14,6 @@ namespace PGSystem_Service.Memberships
         Task<List<MembershipResponse>> GetAllMembershipsAsync();
         Task<Member> RegisterMembershipAsync(RegisterMembershipRequest request, int userId, int orderCode);
         Task<bool> ConfirmMembershipPayment(int orderCode);
+
     }
 }

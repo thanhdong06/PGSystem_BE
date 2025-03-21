@@ -36,6 +36,9 @@ namespace PGSystem_Service.Comments
             if (string.IsNullOrEmpty(userId))
                 throw new UnauthorizedAccessException("User is not authenticated");
 
+            if (!int.TryParse(userId, out int userIdd))
+                throw new Exception("Invalid user ID format");
+
             var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
             if (string.IsNullOrEmpty(userRole) || userRole != "Member")
                 throw new UnauthorizedAccessException("Only members can comment");
@@ -43,7 +46,7 @@ namespace PGSystem_Service.Comments
             var blog = await _blogRepository.GetByIdAsync(request.BID);
             if (blog == null) throw new Exception("Blog does not exist");
 
-            var member = await _membersRepository.GetMemberByIdAsync(userId);
+            var member = await _membersRepository.GetMemberByIdAsync(userIdd);
             if (member == null) throw new Exception("Member does not exist!");
 
             var comment = new Comment

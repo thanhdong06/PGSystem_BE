@@ -32,5 +32,9 @@ namespace PGSystem_Repository.TransactionRepository
             _context.Transactions.Update(transaction);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<TransactionEntity>> GetAllTransactionsAsync()
+        {
+            return await _context.Transactions.ToListAsync();
+        }
     }
 }

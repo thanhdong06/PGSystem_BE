@@ -12,5 +12,6 @@ namespace PGSystem_Repository.TransactionRepository
         Task AddTransactionAsync(TransactionEntity transaction);
         Task<TransactionEntity> GetByMemberIdAsync(int memberId);
         Task UpdateAsync(TransactionEntity transaction);
+        Task<List<TransactionEntity>> GetAllTransactionsAsync();
     }
 }

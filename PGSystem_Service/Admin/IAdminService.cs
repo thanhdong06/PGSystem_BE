@@ -1,5 +1,6 @@
 ﻿using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
+using PGSystem_DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace PGSystem_Service.Admin
         Task<bool> DeleteMembership(int MID);
         Task<MembershipResponse> UpdateMembershipAsync(int id, MembershipsRequest request);
         Task<IEnumerable<MemberResponse>> GetAllMembersWithMembershipAsync();
+        Task<List<TransactionEntity>> GetAllTransactionsAsync();
+
 
     }
 }
