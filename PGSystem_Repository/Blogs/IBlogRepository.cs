@@ -11,8 +11,10 @@ namespace PGSystem_Repository.Blogs
     {
         Task<IEnumerable<Blog>> GetAllBlogAsync();
         Task<IEnumerable<Blog>> GetBlogByAidAsync(int aid);
+        Task<List<Blog>> GetBlogsByUserIdAsync(string userId);
         Task<Blog> CreateBlogsAsync(Blog blog);
-        Task<bool> DeleteBlogs(int bid);
+        Task DeleteBlogsByUserIdAsync(string userId);
+        
         Task<Blog?> GetByIdAsync(int bid);
         Task UpdateAsync(Blog blog);
         Task SaveChangesAsync();

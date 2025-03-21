@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PGSystem_DataAccessLayer.DBContext;
 
@@ -11,9 +12,11 @@ using PGSystem_DataAccessLayer.DBContext;
 namespace PGSystem_DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250321155138_AddTransaction")]
+    partial class AddTransaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,8 +365,7 @@ namespace PGSystem_DataAccessLayer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionID"));
 
                     b.Property<decimal>("Amount")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("MemberID")
                         .HasColumnType("int");
@@ -430,7 +432,7 @@ namespace PGSystem_DataAccessLayer.Migrations
                             Password = "12345",
                             Phone = "0123456789",
                             Role = "Admin",
-                            UpdateAt = new DateTime(2025, 3, 21, 22, 53, 31, 448, DateTimeKind.Local).AddTicks(8679)
+                            UpdateAt = new DateTime(2025, 3, 21, 22, 51, 38, 16, DateTimeKind.Local).AddTicks(3569)
                         });
                 });
 

@@ -33,6 +33,8 @@ namespace PGSystem_DataAccessLayer.DBContext
         public DbSet<RStatus> RStatuses { get; set; }
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<TransactionEntity> Transactions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -188,6 +190,11 @@ namespace PGSystem_DataAccessLayer.DBContext
             // Configure User
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UID);
+
+            // Configure Transaction
+            modelBuilder.Entity<TransactionEntity>()
+            .Property(t => t.Amount)
+            .HasPrecision(18, 4);
         }
     }
 }

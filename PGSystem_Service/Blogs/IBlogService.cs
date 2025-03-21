@@ -13,7 +13,7 @@ namespace PGSystem_Service.Blogs
     {
         Task<IEnumerable<BlogResponse>> GetAllBlogsAsync();
         Task<BlogResponse> CreateBlogAsync(BlogRequest request, ClaimsPrincipal user);
-        Task<bool> DeleteBlogsAsync(int bid);
+        Task<bool> DeleteBlogsAsync(int bid, string userId);
         Task<IEnumerable<BlogResponse>> GetAllBlogByAID(int aid);
         Task<BlogResponse?> GetBlogByBIDAsync(int bid);
         Task<BlogResponse?> UpdateBlogAsync(int bid, BlogUpdateRequest request);

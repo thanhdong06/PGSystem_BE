@@ -41,16 +41,22 @@ namespace PGSystem.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        [HttpDelete]
+        [Authorize(Roles = "Member")]
+        [HttpDelete("{bid}")]
         public async Task<ActionResult<JsonResponse<string>>> DeleteBlog(int bid)
         {
-            {
-                var result = await _blogService.DeleteBlogsAsync(bid);
-                if (!result) return NotFound(new { message = "Blog does not exist!" });
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { message = "User is not authenticated" });
+            var result = await _blogService.DeleteBlogsAsync(bid, userId);
 
-                return Ok(new { message = "Blog and all comments have been deleted" });
-            }
+            if (!result)
+                return NotFound(new { message = "Blog does not exist or you don't have permission to delete it!" });
+
+            return Ok(new { message = "Blog and all comments have been deleted" });
         }
+
+
         [HttpGet("GetAllByAuthor/{aid}")]
         public async Task<IActionResult> GetAllBlogByAID(int aid)
         {

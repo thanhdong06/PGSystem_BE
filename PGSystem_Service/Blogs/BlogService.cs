@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
@@ -65,9 +66,34 @@ namespace PGSystem_Service.Blogs
             };
         }
 
-        public async Task<bool> DeleteBlogsAsync(int bid)
+        public async Task<bool> DeleteBlogsAsync(int bid, string userId)
         {
-            return await _blogRepository.DeleteBlogs(bid);
+            var blog = await _blogRepository.GetByIdAsync(bid);
+            if (blog == null || blog.IsDeleted)
+            {
+                return false;
+            }
+
+            var member = await _membersRepository.GetMemberByID(blog.AID);
+            if (member == null || member.UserUID.ToString() != userId)
+            {
+                return false;
+            }
+
+            blog.IsDeleted = true;
+            blog.UpdateAt = DateTime.UtcNow;
+
+            if (blog.Comments != null && blog.Comments.Any())
+            {
+                foreach (var comment in blog.Comments)
+                {
+                    comment.IsDeleted = true;
+                    comment.UpdateAt = DateTime.UtcNow;
+                }
+            }
+
+            await _blogRepository.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<BlogResponse>> GetAllBlogByAID(int aid)
