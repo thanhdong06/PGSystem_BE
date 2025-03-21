@@ -81,6 +81,15 @@ namespace PGSystem_Repository.Members
                 .FirstOrDefaultAsync(m => m.UserUID.Equals(userId));
 
         }
+        
+        public async Task<Member> GetMemberByID(int memberID)
+        {
+            return await _context.Members
+                .Include(m => m.User)
+                .Include(m => m.Membership)
+                .FirstOrDefaultAsync(m => m.MemberID == memberID);
+
+        }
 
 
         public async Task DeleteMemberAsync(Member member)

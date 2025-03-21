@@ -150,7 +150,7 @@ namespace PGSystem_Service.Members
 
         public async Task<DeleteMemberResponse> DeleteMemberAsync(DeleteMemberRequest request)
         {
-            var member = await _memberRepository.GetMemberByIdAsync(request.MemberID);
+            var member = await _memberRepository.GetMemberByID(request.MemberID);
             if (member == null)
             {
                 throw new KeyNotFoundException("Member not found");
