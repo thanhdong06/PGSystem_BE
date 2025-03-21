@@ -31,5 +31,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public string Status { get; set; } = "Pending"; // Pending | Paid | Failed
 
         public int OrderCode { get; set; }
+        public ICollection<TransactionEntity> Transactions { get; set; }
+
     }
 }

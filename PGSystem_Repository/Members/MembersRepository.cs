@@ -73,14 +73,20 @@ namespace PGSystem_Repository.Members
         }
 
 
-        public async Task<Member> GetMemberByIdAsync(int memberId)
+        public async Task<Member> GetMemberByIdAsync(int userId)
         {
             return await _context.Members
                 .Include(m => m.User)
                 .Include(m => m.Membership)
-                .FirstOrDefaultAsync(m => m.MemberID == memberId);
+                .FirstOrDefaultAsync(m => m.UserUID == userId);
+        }
 
-
+        public async Task<Member> GetMemberByID(int memberID)
+        {
+            return await _context.Members
+                .Include(m => m.User)
+                .Include(m => m.Membership)
+                .FirstOrDefaultAsync(m => m.MemberID == memberID);
 
         }
 

@@ -3,6 +3,7 @@ using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
 using PGSystem_Repository.Admin;
+using PGSystem_Repository.TransactionRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace PGSystem_Service.Admin
     {
        
             private readonly IAdminRepository _adminRepository;
+            private readonly ITransactionRepository _transactionRepository;
             private readonly IMapper _mapper;
 
-            public AdminService(IAdminRepository adminRepository, IMapper mapper)
+            public AdminService(IAdminRepository adminRepository, IMapper mapper, ITransactionRepository transactionRepository)
             {
                 _adminRepository = adminRepository;
+            _transactionRepository = transactionRepository;
                 _mapper = mapper;
             }
 
@@ -35,6 +38,7 @@ namespace PGSystem_Service.Admin
                 return users.Select(u => new UserResponse
                 {
                     UID = u.UID,
+                    FullName = u.FullName,
                     Email = u.Email,
                     Phone = u.Phone,
                     Role = u.Role
@@ -98,8 +102,11 @@ namespace PGSystem_Service.Admin
             var members = await _adminRepository.GetAllMembersWithMembershipAsync();
             return _mapper.Map<IEnumerable<MemberResponse>>(members);
         }
-
+        public async Task<List<TransactionEntity>> GetAllTransactionsAsync()
+        {
+            return await _transactionRepository.GetAllTransactionsAsync();
+        }
     }
-    }
+ }
 
 

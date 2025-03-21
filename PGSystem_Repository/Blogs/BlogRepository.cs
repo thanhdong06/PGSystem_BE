@@ -17,27 +17,36 @@ namespace PGSystem_Repository.Blogs
         {
             _context = context;
         }
-       
-        public async Task<bool> DeleteBlogs(int bid)
+
+        public async Task<List<Blog>> GetBlogsByUserIdAsync(string userId)
         {
-            var blog = await _context.Blogs
-            .Include(b => b.Comments)
-            .FirstOrDefaultAsync(b => b.BID == bid);
-
-            if (blog == null) return false;
-
-            // Cập nhật trạng thái IsDeleted của Blog
-            blog.IsDeleted = true;
-
-            // Cập nhật trạng thái IsDeleted của tất cả Comment liên quan
-            foreach (var comment in blog.Comments)
-            {
-                comment.IsDeleted = true;
-            }
-
-            await _context.SaveChangesAsync();
-            return true;
+            return await _context.Blogs
+                .Where(b => b.Member.UserUID.Equals(userId) && !b.IsDeleted) 
+                .Include(b => b.Comments) 
+                .ToListAsync(); 
         }
+
+        public async Task DeleteBlogsByUserIdAsync(string userId)
+        {
+            var blogs = await _context.Blogs
+                .Where(b => b.Member.UserUID.Equals(userId) && !b.IsDeleted) // Chỉ lấy blog chưa bị xóa
+                .Include(b => b.Comments)
+                .ToListAsync();
+
+            if (!blogs.Any()) return;
+
+            // Cập nhật trạng thái IsDeleted của Blog và Comment
+            foreach (var blog in blogs)
+            {
+                blog.IsDeleted = true;
+                foreach (var comment in blog.Comments)
+                {
+                    comment.IsDeleted = true;
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
 
         public async Task<IEnumerable<Blog>> GetAllBlogAsync()
         {

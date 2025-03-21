@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PGSystem.ResponseType;
 using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
 using PGSystem_Service.Blogs;
+using System.Security.Claims;
 
 
 
@@ -25,12 +27,13 @@ namespace PGSystem.Controllers
             return Ok(blogs);
         }
 
+        [Authorize(Roles = "Member")]
         [HttpPost]
         public async Task<IActionResult> CreateBlog([FromBody] BlogRequest request)
         {
             try
             {
-                var blog = await _blogService.CreateBlogAsync(request);
+                var blog = await _blogService.CreateBlogAsync(request, User);
                 return CreatedAtAction(nameof(CreateBlog), new { id = blog.BID }, blog);
             }
             catch (Exception ex)
@@ -38,16 +41,22 @@ namespace PGSystem.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        [HttpDelete]
+        [Authorize(Roles = "Member")]
+        [HttpDelete("{bid}")]
         public async Task<ActionResult<JsonResponse<string>>> DeleteBlog(int bid)
         {
-            {
-                var result = await _blogService.DeleteBlogsAsync(bid);
-                if (!result) return NotFound(new { message = "Blog does not exist!" });
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { message = "User is not authenticated" });
+            var result = await _blogService.DeleteBlogsAsync(bid, userId);
 
-                return Ok(new { message = "Blog and all comments have been deleted" });
-            }
+            if (!result)
+                return NotFound(new { message = "Blog does not exist or you don't have permission to delete it!" });
+
+            return Ok(new { message = "Blog and all comments have been deleted" });
         }
+
+
         [HttpGet("GetAllByAuthor/{aid}")]
         public async Task<IActionResult> GetAllBlogByAID(int aid)
         {

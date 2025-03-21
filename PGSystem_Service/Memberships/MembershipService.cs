@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PGSystem_Repository.TransactionRepository;
 
 namespace PGSystem_Service.Memberships
 {
@@ -21,16 +22,19 @@ namespace PGSystem_Service.Memberships
         private readonly IMembershipRepository _membershipRepository;
         private readonly IMembersRepository _memberRepository;
         private readonly IAuthRepository _authRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
         public MembershipService(IMembershipRepository membershipRepository,
                                  IMembersRepository memberRepository,
                                  IAuthRepository authRepository,
+                                 ITransactionRepository transactionRepository,
                                  IMapper mapper)
         {
             _membershipRepository = membershipRepository;
             _memberRepository = memberRepository;
             _authRepository = authRepository;
+            _transactionRepository = transactionRepository;
             _mapper = mapper;
         }
 
@@ -64,6 +68,16 @@ namespace PGSystem_Service.Memberships
             };
 
             await _memberRepository.AddMemberAsync(member);
+
+            var transaction = new TransactionEntity
+            {
+                MemberID = member.MemberID, 
+                Amount = membership.Price, 
+                TransactionDate = DateTime.Now,
+                Status = "Pending",
+            };
+
+            await _transactionRepository.AddTransactionAsync(transaction);
             return member;
         }
 
@@ -78,6 +92,23 @@ namespace PGSystem_Service.Memberships
             member.Status = "Paid";
 
             await _memberRepository.UpdateAsync(member);
+            var user = await _authRepository.GetUserByIDAsync(member.UserUID);
+            if (user == null)
+            {
+                throw new Exception("User not found for this membership");
+            }
+
+            user.Role = "Member";
+            await _authRepository.UpdateAsync(user);
+
+            var transaction = await _transactionRepository.GetByMemberIdAsync(member.MemberID);
+            if (transaction == null)
+            {
+                throw new Exception("Transaction not found for this membership");
+            }
+
+            transaction.Status = "Completed";
+            await _transactionRepository.UpdateAsync(transaction);
             return true;
         }
 

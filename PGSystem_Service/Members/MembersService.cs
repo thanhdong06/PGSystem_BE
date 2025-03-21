@@ -13,6 +13,7 @@ using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.Entities;
 using PGSystem_Repository.Users;
 using Microsoft.AspNetCore.Identity;
+using PGSystem_Repository.PregnancyRecords;
 
 namespace PGSystem_Service.Members
 {
@@ -21,13 +22,15 @@ namespace PGSystem_Service.Members
         private readonly IAdminRepository _adminRepository;
         private readonly IAuthRepository _authRepository;
         private readonly IMembersRepository _memberRepository;
+        private readonly IPregnancyRecordRepository _pregnancyRecordRepository;
         private readonly IMapper _mapper;
         
-        public MembersService(IMembersRepository membersRepository, IMapper mapper, IAdminRepository adminRepository )
+        public MembersService(IMembersRepository membersRepository, IMapper mapper, IAdminRepository adminRepository, IPregnancyRecordRepository pregnancyRecordRepository)
         {
             _memberRepository = membersRepository;
             _mapper = mapper;
-            _adminRepository = adminRepository;         
+            _adminRepository = adminRepository;
+            _pregnancyRecordRepository = pregnancyRecordRepository;
         }
         //public async Task<List<MemberResponse>> GetAllMembersAsync()
         //{
@@ -150,10 +153,15 @@ namespace PGSystem_Service.Members
 
         public async Task<DeleteMemberResponse> DeleteMemberAsync(DeleteMemberRequest request)
         {
-            var member = await _memberRepository.GetMemberByIdAsync(request.MemberID);
+            var member = await _memberRepository.GetMemberByID(request.MemberID);
             if (member == null)
             {
                 throw new KeyNotFoundException("Member not found");
+            }
+            var pregnancyRecords = await _pregnancyRecordRepository.GetPregnancyRecordByMemberIDAsync(member.MemberID);
+            if (pregnancyRecords.Any())
+            {
+                _pregnancyRecordRepository.Delete(pregnancyRecords);
             }
 
             await _memberRepository.DeleteMemberAsync(member);

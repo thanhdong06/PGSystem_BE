@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
@@ -7,6 +8,7 @@ using PGSystem_Repository.Members;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,10 +26,24 @@ namespace PGSystem_Service.Blogs
             _blogRepository = blogRepository;
             _mapper = mapper;
         }
-        public async Task<BlogResponse> CreateBlogAsync(BlogRequest request)
+        public async Task<BlogResponse> CreateBlogAsync(BlogRequest request, ClaimsPrincipal user)
         {
-            var member = await _membersRepository.GetMemberByIdAsync(request.AID);
-            if (member == null) throw new Exception("Member is not exist");
+            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+                throw new UnauthorizedAccessException("User is not authenticated");
+
+            if (!int.TryParse(userIdClaim, out int userId))
+                throw new Exception("Invalid user ID format");
+
+            var member = await _membersRepository.GetMemberByIdAsync(userId);
+            if (member == null)
+                throw new Exception("Member does not exist");
+
+            if (member.Status != "Paid")
+                throw new UnauthorizedAccessException("Only paid members can create blogs");
+            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrEmpty(userRole) || userRole != "Member")
+                throw new UnauthorizedAccessException("Only members can create blogs");
 
             var newBlog = new Blog
             {
@@ -35,8 +51,9 @@ namespace PGSystem_Service.Blogs
                 Content = request.Content,
                 Type = request.Type,
                 Member = member,
-                CreateAt = DateTime.UtcNow,
-                UpdateAt = DateTime.UtcNow,
+                AID = member.MemberID,
+                CreateAt = DateTime.Now,
+                UpdateAt = DateTime.Now,
                 IsDeleted = false
             };
 
@@ -50,13 +67,38 @@ namespace PGSystem_Service.Blogs
                 Type = createdBlog.Type,
                 CreateAt = createdBlog.CreateAt,
                 UpdateAt = createdBlog.UpdateAt,
-                AID = createdBlog.Member.MemberID
+                AID = createdBlog.AID
             };
         }
 
-        public async Task<bool> DeleteBlogsAsync(int bid)
+        public async Task<bool> DeleteBlogsAsync(int bid, string userId)
         {
-            return await _blogRepository.DeleteBlogs(bid);
+            var blog = await _blogRepository.GetByIdAsync(bid);
+            if (blog == null || blog.IsDeleted)
+            {
+                return false;
+            }
+
+            var member = await _membersRepository.GetMemberByID(blog.AID);
+            if (member == null || member.UserUID.ToString() != userId)
+            {
+                return false;
+            }
+
+            blog.IsDeleted = true;
+            blog.UpdateAt = DateTime.UtcNow;
+
+            if (blog.Comments != null && blog.Comments.Any())
+            {
+                foreach (var comment in blog.Comments)
+                {
+                    comment.IsDeleted = true;
+                    comment.UpdateAt = DateTime.UtcNow;
+                }
+            }
+
+            await _blogRepository.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<BlogResponse>> GetAllBlogByAID(int aid)
