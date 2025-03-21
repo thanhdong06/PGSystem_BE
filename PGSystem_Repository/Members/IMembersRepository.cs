@@ -23,7 +23,7 @@ namespace PGSystem_Repository.Members
 
         Task UpdateAsync(Member member);
         Task SaveChangesAsync();
-        Task<Member> GetMemberByIdAsync(int mid);
+        Task<Member> GetMemberByIdAsync(string userId);
         Task DeleteMemberAsync(Member member);
 
 

@@ -7,6 +7,7 @@ using PGSystem_Repository.Members;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,10 +25,19 @@ namespace PGSystem_Service.Blogs
             _blogRepository = blogRepository;
             _mapper = mapper;
         }
-        public async Task<BlogResponse> CreateBlogAsync(BlogRequest request)
+        public async Task<BlogResponse> CreateBlogAsync(BlogRequest request, ClaimsPrincipal user)
         {
-            var member = await _membersRepository.GetMemberByIdAsync(request.AID);
-            if (member == null) throw new Exception("Member is not exist");
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedAccessException("User is not authenticated");
+
+            var member = await _membersRepository.GetMemberByIdAsync(userId);
+            if (member == null)
+                throw new Exception("Member does not exist");
+
+            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrEmpty(userRole) || userRole != "Member")
+                throw new UnauthorizedAccessException("Only members can create blogs");
 
             var newBlog = new Blog
             {
@@ -35,6 +45,7 @@ namespace PGSystem_Service.Blogs
                 Content = request.Content,
                 Type = request.Type,
                 Member = member,
+                AID = member.MemberID,
                 CreateAt = DateTime.UtcNow,
                 UpdateAt = DateTime.UtcNow,
                 IsDeleted = false
@@ -50,7 +61,7 @@ namespace PGSystem_Service.Blogs
                 Type = createdBlog.Type,
                 CreateAt = createdBlog.CreateAt,
                 UpdateAt = createdBlog.UpdateAt,
-                AID = createdBlog.Member.MemberID
+                AID = createdBlog.AID
             };
         }
 

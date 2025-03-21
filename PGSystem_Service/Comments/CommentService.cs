@@ -9,6 +9,7 @@ using PGSystem_Repository.Members;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,21 +30,27 @@ namespace PGSystem_Service.Comments
             _membersRepository = membersRepository;
         }
 
-        public async Task<CommentResponse> CreateCommentAsync(CommentRequest request)
+        public async Task<CommentResponse> CreateCommentAsync(CommentRequest request, ClaimsPrincipal user)
         {
-            // Kiểm tra Blog có tồn tại không
-            var blog = await _blogRepository.GetByIdAsync(request.BID);
-            if (blog == null) throw new Exception("Blog is not exist");
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedAccessException("User is not authenticated");
 
-            // Kiểm tra Member có tồn tại không
-            var member = await _membersRepository.GetMemberByIdAsync(request.MemberID);
-            if (member == null) throw new Exception("Member is not exist!");
+            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrEmpty(userRole) || userRole != "Member")
+                throw new UnauthorizedAccessException("Only members can comment");
+
+            var blog = await _blogRepository.GetByIdAsync(request.BID);
+            if (blog == null) throw new Exception("Blog does not exist");
+
+            var member = await _membersRepository.GetMemberByIdAsync(userId);
+            if (member == null) throw new Exception("Member does not exist!");
 
             var comment = new Comment
             {
                 Content = request.Content,
                 BID = request.BID,
-                MemberID = request.MemberID,
+                MemberID = member.MemberID,
                 CreateAt = DateTime.UtcNow,
                 UpdateAt = DateTime.UtcNow,
                 IsDeleted = false
@@ -60,6 +67,7 @@ namespace PGSystem_Service.Comments
                 CreateAt = createdComment.CreateAt
             };
         }
+
 
         public async Task<bool> DeleteCommentAsync(int cid)
         {

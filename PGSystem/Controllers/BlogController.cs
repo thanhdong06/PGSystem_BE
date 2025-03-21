@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PGSystem.ResponseType;
 using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
 using PGSystem_Service.Blogs;
+using System.Security.Claims;
 
 
 
@@ -25,12 +27,13 @@ namespace PGSystem.Controllers
             return Ok(blogs);
         }
 
+        [Authorize(Roles = "Member")]
         [HttpPost]
         public async Task<IActionResult> CreateBlog([FromBody] BlogRequest request)
         {
             try
             {
-                var blog = await _blogService.CreateBlogAsync(request);
+                var blog = await _blogService.CreateBlogAsync(request, User);
                 return CreatedAtAction(nameof(CreateBlog), new { id = blog.BID }, blog);
             }
             catch (Exception ex)

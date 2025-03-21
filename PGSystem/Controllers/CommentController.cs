@@ -36,7 +36,7 @@ namespace PGSystem.Controllers
                 return BadRequest("Invalid Data");
             }
 
-            var createdComment = await _commentService.CreateCommentAsync(request);
+            var createdComment = await _commentService.CreateCommentAsync(request, User);
             return Ok(createdComment);
         }
         [HttpDelete]
