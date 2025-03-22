@@ -53,6 +53,7 @@ namespace PGSystem_Service.Comments
             {
                 Content = request.Content,
                 BID = request.BID,
+                Member = member,
                 MemberID = member.MemberID,
                 CreateAt = DateTime.UtcNow,
                 UpdateAt = DateTime.UtcNow,
