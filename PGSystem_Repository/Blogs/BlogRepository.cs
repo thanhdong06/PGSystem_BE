@@ -61,6 +61,7 @@ namespace PGSystem_Repository.Blogs
         public async Task<IEnumerable<Blog>> GetBlogByAidAsync(int aid)
         {
             return await _context.Blogs
+                .Include(b=> b.Member).ThenInclude(m=>m.User)
             .Where(b => b.AID == aid && !b.IsDeleted)
             .ToListAsync();
         }
