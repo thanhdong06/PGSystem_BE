@@ -58,11 +58,14 @@ namespace PGSystem_Service.Memberships
             if (isAlreadyMember)
                 throw new Exception("User is already a member!");
 
+            user.Role = "Member";
+            await _authRepository.UpdateAsync(user);
+
             var member = new Member
             {
                 UserUID = userId,
                 MembershipID = request.MembershipId,
-                Status = "Pending",
+                Status = "Paid",
                 OrderCode = orderCode,
                 IsDeleted = false
             };
@@ -74,7 +77,7 @@ namespace PGSystem_Service.Memberships
                 MemberID = member.MemberID, 
                 Amount = membership.Price, 
                 TransactionDate = DateTime.Now,
-                Status = "Pending",
+                Status = "Paid",
             };
 
             await _transactionRepository.AddTransactionAsync(transaction);

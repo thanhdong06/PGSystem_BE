@@ -78,7 +78,7 @@ namespace PGSystem_Repository.Users
         }
         public async Task<User> LoginAsync(LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            var user = await _context.Users.Include(u => u.Member).FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
             {

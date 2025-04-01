@@ -46,15 +46,11 @@ namespace PGSystem_Service.Comments
             var blog = await _blogRepository.GetByIdAsync(request.BID);
             if (blog == null) throw new Exception("Blog does not exist");
 
-            var member = await _membersRepository.GetMemberByIdAsync(userIdd);
-            if (member == null) throw new Exception("Member does not exist!");
-
             var comment = new Comment
             {
                 Content = request.Content,
                 BID = request.BID,
-                Member = member,
-                MemberID = member.MemberID,
+                MemberID = request.MemberID,
                 CreateAt = DateTime.UtcNow,
                 UpdateAt = DateTime.UtcNow,
                 IsDeleted = false

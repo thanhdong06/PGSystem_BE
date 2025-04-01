@@ -72,11 +72,13 @@ namespace PGSystem_Service.Users
 
             var responseUser = new UserResponse
             {
+                UID = user.UID,
                 Email = user.Email,
                 Phone = user.Phone,
                 Role = user.Role,
                 FullName = user.FullName,
-            };
+                MemberId = user.Member?.MemberID,
+            };  
 
             return new LoginResponse
             {
@@ -133,13 +135,18 @@ namespace PGSystem_Service.Users
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:secret"]);
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UID.ToString()),
                 new Claim(ClaimTypes.Name, user.Phone.ToString()),
                 new Claim(ClaimTypes.Role, user.Role),
                 new Claim("tokenType", "access")
+
             };
+            if (user.Member != null)
+            {
+                claims.Add(new Claim("MemberId", user.Member.MemberID.ToString()));
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

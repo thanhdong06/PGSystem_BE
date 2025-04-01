@@ -85,7 +85,11 @@ namespace PGSystem.Controllers
                 );
                 var response = await payOS.createPaymentLink(paymentLinkRequest);
 
-                return Ok(new JsonResponse<object>(response, 200, "Create payment request successfully"));
+                return Ok(new JsonResponse<object>(new
+                {
+                    userID = userId,
+                    paymentResponse = response
+                }, 200, "Create payment request successfully"));
             }
             catch (Exception ex)
             {

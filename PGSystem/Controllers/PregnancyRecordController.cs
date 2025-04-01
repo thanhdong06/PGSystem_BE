@@ -22,6 +22,14 @@ namespace PGSystem.Controllers
         {
             try
             {
+                var memberId = User.FindFirst("MemberId")?.Value;
+                if (string.IsNullOrEmpty(memberId))
+                {
+                    return Unauthorized(new JsonResponse<string>("Unauthorized: MemberId not found in token", 401, null));
+                }
+
+                request.MemberMemberID = int.Parse(memberId);
+
                 await _pregnancyRecordService.CreatePregnancyRecordAsync(request);
                 return Ok(new JsonResponse<string>(null, 200, "Pregnancy record created successfully"));
             }
