@@ -14,6 +14,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PGSystem_Repository.TransactionRepository;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace PGSystem_Service.Memberships
 {
@@ -24,17 +28,20 @@ namespace PGSystem_Service.Memberships
         private readonly IAuthRepository _authRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
         public MembershipService(IMembershipRepository membershipRepository,
                                  IMembersRepository memberRepository,
                                  IAuthRepository authRepository,
                                  ITransactionRepository transactionRepository,
+                                 IConfiguration configuration,
                                  IMapper mapper)
         {
             _membershipRepository = membershipRepository;
             _memberRepository = memberRepository;
             _authRepository = authRepository;
             _transactionRepository = transactionRepository;
+            _configuration = configuration;
             _mapper = mapper;
         }
 
@@ -44,7 +51,7 @@ namespace PGSystem_Service.Memberships
             return _mapper.Map<List<MembershipResponse>>(memberships);
         }
 
-        public async Task<Member> RegisterMembershipAsync(RegisterMembershipRequest request, int userId, int orderCode)
+        public async Task<LoginMemberResponse> RegisterMembershipAsync(RegisterMembershipRequest request, int userId, int orderCode)
         {
             var user = await _authRepository.GetUserByIDAsync(userId);
             if (user == null)
@@ -81,7 +88,54 @@ namespace PGSystem_Service.Memberships
             };
 
             await _transactionRepository.AddTransactionAsync(transaction);
-            return member;
+
+            var accessToken = CreateToken(user, 30);    
+            var token = new LoginResponse
+            {
+                Token = accessToken,
+                RefreshToken = accessToken,
+            };
+
+            return new LoginMemberResponse
+            {
+                Member = member,
+                LoginResponse = token
+            };
+        }
+
+        private string CreateToken(User user, int expireMinutes)
+        {
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid login request", nameof(user));
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:secret"]);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.UID.ToString()),
+                new Claim(ClaimTypes.Name, user.Phone.ToString()),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("tokenType", "access")
+
+            };
+            if (user.Member != null)
+            {
+                claims.Add(new Claim("MemberId", user.Member.MemberID.ToString()));
+            }
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(expireMinutes),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = _configuration["Jwt:issuer"],
+                Audience = _configuration["Jwt:audience"]
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         public async Task<bool> ConfirmMembershipPayment(int orderCode)

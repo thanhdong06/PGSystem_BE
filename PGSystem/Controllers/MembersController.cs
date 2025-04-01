@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
 using Net.payOS;
 using Net.payOS.Types;
@@ -9,7 +10,9 @@ using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
 using PGSystem_Service.Members;
 using PGSystem_Service.Memberships;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace PGSystem.Controllers
 {
@@ -19,11 +22,13 @@ namespace PGSystem.Controllers
     {
         private readonly IMembershipService _membershipService;
         private readonly IMembersService _membersService;
+        private readonly IConfiguration _configuration;
 
-        public MembersController(IMembershipService membershipService, IMembersService membersService)
+        public MembersController(IMembershipService membershipService, IMembersService membersService, IConfiguration configuration)
         {
             _membershipService = membershipService;
             _membersService = membersService;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -49,7 +54,7 @@ namespace PGSystem.Controllers
         [Authorize]
         [HttpPost("Register-Membership")]
         public async Task<ActionResult<JsonResponse<string>>> RegisterMembership([FromBody] RegisterMembershipRequest request)
-        {
+            {
             try
             {
                 var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
@@ -67,7 +72,7 @@ namespace PGSystem.Controllers
                 {
                     return BadRequest(new JsonResponse<string>("Failed to register membership", 400, ""));
                 }
-                int amountInInt = Convert.ToInt32(Math.Round((decimal)membershipResult.Membership.Price));
+                int amountInInt = Convert.ToInt32(Math.Round((decimal)membershipResult.Member.Membership.Price));
 
                 var clientId = "7550278f-4d3f-4841-a46d-442d20a0f70c";
                 var apiKey = "12f77493-2240-460f-9746-d1a7a9ff2b74";
@@ -88,7 +93,8 @@ namespace PGSystem.Controllers
                 return Ok(new JsonResponse<object>(new
                 {
                     userID = userId,
-                    paymentResponse = response
+                    paymentResponse = response,
+                    loginReponse = membershipResult.LoginResponse,
                 }, 200, "Create payment request successfully"));
             }
             catch (Exception ex)
