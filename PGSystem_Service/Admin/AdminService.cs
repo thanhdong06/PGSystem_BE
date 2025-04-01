@@ -53,7 +53,8 @@ namespace PGSystem_Service.Admin
                     MID = u.MID,
                     Name = u.Name,
                     Description = u.Description,
-                    Price = u.Price
+                    Price = u.Price,
+                    
                 }).ToList();
             }
             public async Task<SystemReportResponse> GetSystemReportAsync()

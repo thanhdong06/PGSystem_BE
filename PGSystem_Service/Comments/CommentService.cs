@@ -41,7 +41,7 @@ namespace PGSystem_Service.Comments
 
             var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
             if (string.IsNullOrEmpty(userRole) || userRole != "Member")
-                throw new UnauthorizedAccessException("Only members can comment");
+                throw new UnauthorizedAccessException("Only members can comment"); 
 
             var blog = await _blogRepository.GetByIdAsync(request.BID);
             if (blog == null) throw new Exception("Blog does not exist");
@@ -57,15 +57,9 @@ namespace PGSystem_Service.Comments
             };
 
             var createdComment = await _commentRepository.CreateCommentAsync(comment);
+            var newComment = await _commentRepository.GetByIdAsync(comment.CID);
 
-            return new CommentResponse
-            {
-                CID = createdComment.CID,
-                Content = createdComment.Content,
-                BID = createdComment.BID,
-                MemberID = createdComment.MemberID,
-                CreateAt = createdComment.CreateAt
-            };
+            return _mapper.Map<CommentResponse>(newComment);
         }
 
 
