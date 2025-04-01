@@ -27,6 +27,8 @@ namespace PGSystem_Service.PregnancyRecords
         public async Task<PregnancyRecordResponse> CreatePregnancyRecordAsync(PregnancyRecordRequest request)
         {
             var entity = _mapper.Map<PregnancyRecord>(request);
+            entity.MemberMemberID = request.MemberMemberID;
+
 
             entity.StartDate = DateOnly.FromDateTime(DateTime.Now);
             entity.DueDate = entity.StartDate.AddDays(280);
@@ -55,7 +57,6 @@ namespace PGSystem_Service.PregnancyRecords
                 };
                 growthRecords.Add(growthRecord);
             }
-            // Lưu các GrowthRecord vào cơ sở dữ liệu
             foreach (var record in growthRecords)
             {
                 await _growthRecordRepository.AddAsync(record);

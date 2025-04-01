@@ -25,7 +25,7 @@ using System.Threading.Tasks;
             }
             public async Task<List<Membership>> GetAllMembershipsAsync()
             {
-                return await _context.Memberships.ToListAsync();
+                return await _context.Memberships.Where(m => !m.IsDeleted).ToListAsync();
             }
             public async Task<SystemReportResponse> GetSystemReportAsync()
             {

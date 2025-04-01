@@ -41,35 +41,25 @@ namespace PGSystem_Service.Comments
 
             var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
             if (string.IsNullOrEmpty(userRole) || userRole != "Member")
-                throw new UnauthorizedAccessException("Only members can comment");
+                throw new UnauthorizedAccessException("Only members can comment"); 
 
             var blog = await _blogRepository.GetByIdAsync(request.BID);
             if (blog == null) throw new Exception("Blog does not exist");
-
-            var member = await _membersRepository.GetMemberByIdAsync(userIdd);
-            if (member == null) throw new Exception("Member does not exist!");
 
             var comment = new Comment
             {
                 Content = request.Content,
                 BID = request.BID,
-                Member = member,
-                MemberID = member.MemberID,
+                MemberID = request.MemberID,
                 CreateAt = DateTime.UtcNow,
                 UpdateAt = DateTime.UtcNow,
                 IsDeleted = false
             };
 
             var createdComment = await _commentRepository.CreateCommentAsync(comment);
+            var newComment = await _commentRepository.GetByIdAsync(comment.CID);
 
-            return new CommentResponse
-            {
-                CID = createdComment.CID,
-                Content = createdComment.Content,
-                BID = createdComment.BID,
-                MemberID = createdComment.MemberID,
-                CreateAt = createdComment.CreateAt
-            };
+            return _mapper.Map<CommentResponse>(newComment);
         }
 
 

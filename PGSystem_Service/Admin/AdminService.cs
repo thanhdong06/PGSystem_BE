@@ -50,9 +50,11 @@ namespace PGSystem_Service.Admin
 
                 return memberships.Select(u => new MembershipResponse
                 {
+                    MID = u.MID,
                     Name = u.Name,
                     Description = u.Description,
-                    Price = u.Price
+                    Price = u.Price,
+                    
                 }).ToList();
             }
             public async Task<SystemReportResponse> GetSystemReportAsync()

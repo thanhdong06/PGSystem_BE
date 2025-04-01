@@ -17,7 +17,6 @@ namespace PGSystem.Controllers
         {
             _adminService = adminService;
         }
-        [Authorize(Roles = "Admin")]
         [HttpGet("Users")]
         public async Task<ActionResult<JsonResponse<List<UserResponse>>>> GetAllUsers()
         {
@@ -37,7 +36,6 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<List<UserResponse>>(new List<UserResponse>(), 500, "An error occurred while retrieving users"));
             }
         }
-        [Authorize(Roles = "Admin")]
         [HttpGet("Memberships")]
         public async Task<ActionResult<JsonResponse<List<MembershipResponse>>>> GetAllMembership()
         {
@@ -57,7 +55,6 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<List<MembershipResponse>>(new List<MembershipResponse>(), 500, "An error occurred while retrieving memberships"));
             }
         }
-        [Authorize(Roles = "Admin")]
         [HttpGet("Reports")]
         public async Task<ActionResult<JsonResponse<SystemReportResponse>>> GetSystemReport()
         {
@@ -78,7 +75,6 @@ namespace PGSystem.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("Transactions")]
         public async Task<IActionResult> GetAllTransactions()
         {
@@ -86,7 +82,6 @@ namespace PGSystem.Controllers
             return Ok(transactions);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteMembership")]
         public async Task<ActionResult<JsonResponse<string>>> DeleteMembership(int MID)
         {
@@ -106,14 +101,12 @@ namespace PGSystem.Controllers
                 return StatusCode(500, new JsonResponse<string>(null, 500, "An error occurred while deleting the Membership"));
             }
         }
-        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateMembership/{id}")]
         public async Task<IActionResult> UpdateMembership(int id, [FromBody] MembershipsRequest request)
         {
             var updatedMembership = await _adminService.UpdateMembershipAsync(id, request);
             return Ok(updatedMembership);
         }
-        [Authorize(Roles = "Admin")]
         [HttpPost("CreateMembership")]
         public async Task<ActionResult<JsonResponse<string>>> CreateMembership([FromBody] MembershipsRequest request)
         {
@@ -127,7 +120,6 @@ namespace PGSystem.Controllers
                 return BadRequest(new JsonResponse<string>("Something went wrong, please contact the admin", 400, ex.Message));
             }
         }
-        [Authorize(Roles = "Admin")]
         [HttpGet("with-membership")]
         public async Task<IActionResult> GetMembersWithMembership()
         {

@@ -12,7 +12,7 @@ namespace PGSystem_Service.Memberships
     public interface IMembershipService
     {
         Task<List<MembershipResponse>> GetAllMembershipsAsync();
-        Task<Member> RegisterMembershipAsync(RegisterMembershipRequest request, int userId, int orderCode);
+        Task<LoginMemberResponse> RegisterMembershipAsync(RegisterMembershipRequest request, int userId, int orderCode);
         Task<bool> ConfirmMembershipPayment(int orderCode);
 
     }

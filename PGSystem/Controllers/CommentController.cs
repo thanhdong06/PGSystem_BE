@@ -31,6 +31,14 @@ namespace PGSystem.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateComment([FromBody] CommentRequest request)
         {
+            var memberId = User.FindFirst("MemberId")?.Value;
+            if (string.IsNullOrEmpty(memberId))
+            {
+                return Unauthorized(new JsonResponse<string>("Unauthorized: MemberId not found in token", 401, null));
+            }
+
+            request.MemberID = int.Parse(memberId);
+
             if (request == null)
             {
                 return BadRequest("Invalid Data");
