@@ -19,7 +19,7 @@ namespace PGSystem_Repository.ThresholdRepository
         public async Task<Thresholds> GetThresholdByNameAsync(string MeasurementType)
         {
             return await _context.Thresholds
-                    .FirstOrDefaultAsync(t => t.MeasurementType == MeasurementType);
+                    .FirstOrDefaultAsync(t => t.MeasurementType.Equals(MeasurementType));
         }
     }
 }

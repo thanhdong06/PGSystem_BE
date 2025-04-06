@@ -124,7 +124,8 @@ namespace PGSystem.Controllers
                         updatedMeasurement.HeadCircumference,
                         updatedMeasurement.WeightEstimate,
                         updatedMeasurement.DateMeasured,
-                        updatedMeasurement.UpdatedAt
+                        updatedMeasurement.UpdatedAt,
+                        warnings = updatedMeasurement.Warnings ?? new List<string>()
                     }
                 });
             }
