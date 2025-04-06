@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Execution;
 using PGSystem_DataAccessLayer.DTO.RequestModel;
 using PGSystem_DataAccessLayer.DTO.ResponseModel;
 using PGSystem_DataAccessLayer.Entities;
@@ -34,7 +35,7 @@ namespace PGSystem_Service.PregnancyRecords
             entity.MemberMemberID = request.MemberMemberID;
             entity.StartDate = request.StartDate ?? DateOnly.FromDateTime(DateTime.Now);
             entity.DueDate = entity.StartDate.AddDays(280);
-            entity.Status = "Đang theo dõi";
+            entity.Status = "Tracking";
             entity.CreateAt = entity.UpdateAt = DateTime.Now;
 
             var createdRecord = await _pregnancyRepository.AddAsync(entity);
@@ -50,6 +51,31 @@ namespace PGSystem_Service.PregnancyRecords
             }
 
             return _mapper.Map<PregnancyRecordResponse>(createdRecord);
+        }
+
+        public async Task<PregnancyRecordResponse> ClosePregnancyRecordAsync(int pregnancyRecordId, int memberId)
+        {
+            var pregnancyRecord = await _pregnancyRepository.GetByIdAsync(pregnancyRecordId);
+
+            if (pregnancyRecord == null)
+            {
+                throw new KeyNotFoundException("Pregnancy record not found");
+            }
+            if (pregnancyRecord.MemberMemberID != memberId)
+            {
+                throw new UnauthorizedAccessException("You do not have permission to close this pregnancy record.");
+            }
+            if (pregnancyRecord.Status == "Closed")
+            {
+                throw new InvalidOperationException("This pregnancy record is already closed.");
+            }
+
+            pregnancyRecord.Status = "Closed";
+            pregnancyRecord.UpdateAt = DateTime.Now;
+
+            await _pregnancyRepository.UpdateAsync(pregnancyRecord);
+
+            return _mapper.Map<PregnancyRecordResponse>(pregnancyRecord);
         }
 
         public async Task<List<PregnancyRecordResponse>> GetByMemberIdAsync(int memberId)

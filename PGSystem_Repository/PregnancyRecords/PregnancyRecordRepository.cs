@@ -35,6 +35,11 @@ namespace PGSystem_Repository.PregnancyRecords
         {
             return await _context.PregnancyRecords.FirstOrDefaultAsync(p => p.PID == id);
         }
+        public async Task UpdateAsync(PregnancyRecord pregnancyRecord)
+        {
+            _context.PregnancyRecords.Update(pregnancyRecord);
+            await _context.SaveChangesAsync();
+        }
 
         public void Delete(List<PregnancyRecord> pregnancyRecords)
         {

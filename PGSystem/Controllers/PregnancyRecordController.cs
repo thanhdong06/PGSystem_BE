@@ -73,5 +73,36 @@ namespace PGSystem.Controllers
                 return BadRequest(new { message = "Error occurred", error = ex.Message });
             }
         }
+
+        [Authorize(Roles = "Member")]
+        [HttpPut("ClosePregnancyRecord")]
+        public async Task<IActionResult> ClosePregnancyRecord([FromQuery] int pregnancyRecordId)
+        {
+            try
+            {
+                var memberIdClaim = User.FindFirst("MemberId")?.Value;
+                if (string.IsNullOrEmpty(memberIdClaim) || !int.TryParse(memberIdClaim, out int memberId))
+                {
+                    return Unauthorized("Unauthorized: MemberId not found or invalid");
+                }
+
+                var closedRecord = await _pregnancyRecordService.ClosePregnancyRecordAsync(pregnancyRecordId, memberId);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Pregnancy record closed successfully",
+                    data = closedRecord
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
     }
 }
