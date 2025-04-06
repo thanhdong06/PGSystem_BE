@@ -13,7 +13,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public int ThresholdsId { get; set; }
 
         public string MeasurementType { get; set; }
-
+        public int Week { get; set; }
         public double MinValue { get; set; }
         public double MaxValue { get; set; }
         public string WarningMessage { get; set; }

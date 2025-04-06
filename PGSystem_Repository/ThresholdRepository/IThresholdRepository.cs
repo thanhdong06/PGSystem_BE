@@ -9,6 +9,6 @@ namespace PGSystem_Repository.ThresholdRepository
 {
     public interface IThresholdRepository
     {
-        Task<Thresholds> GetThresholdByNameAsync(string MeasurementType);
+        Task<Thresholds> GetThresholdByNameAsync(string MeasurementType, int week);
     }
 }
