@@ -4,6 +4,7 @@ using PGSystem_DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,9 +25,21 @@ namespace PGSystem_Repository.Fetuss
             return fetus;
         }
 
-        public Task<List<Fetus>> GetByPregnancyRecordId(int pregnancyRecordId)
+        public async Task<List<Fetus>> GetFetusByPregnancyRecordId(int pregnancyRecordId)
         {
-            throw new NotImplementedException();
+            return await _context.Fetuses.Where(f => f.PregnancyRecordId == pregnancyRecordId).ToListAsync();
+
         }
+        public async Task<bool> ExistsAsync(Expression<Func<Fetus, bool>> predicate)
+        {
+            return await _context.Fetuses.AnyAsync(predicate);
+        }
+        public async Task<FetusMeasurement> AddMeasurementAsync(FetusMeasurement fetus)
+        {
+            _context.FetusMeasurements.Add(fetus);
+            await _context.SaveChangesAsync();
+            return fetus;
+        }
+
     }
 }

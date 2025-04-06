@@ -20,23 +20,88 @@ namespace PGSystem.Controllers
 
         [Authorize(Roles = "Member")]
         [HttpPost("fetuses")]
-        public async Task<ActionResult<JsonResponse<string>>> CreateFetus([FromBody] FetusRequest request)
+        public async Task<ActionResult> CreateFetus([FromBody] FetusRequest request)
         {
             try
             {
                 var created = await _fetusService.CreateFetusAsync(request);
-
-                var json = JsonSerializer.Serialize(created, new JsonSerializerOptions
+           
+                return Ok(new
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = true
+                    success = true,
+                    message = "Fetus records retrieved successfully",
+                    data = created
                 });
-
-                return Ok(new JsonResponse<string>("Fetus created successfully", 200, json));
             }
             catch (Exception ex)
             {
-                return BadRequest(new JsonResponse<string>("Failed to create fetus", 400, ex.Message));
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Failed to create fetus",
+                    error = ex.Message
+                });
+            }
+        }
+
+        [Authorize(Roles = "Member")]
+        [HttpGet("Fetuses")]
+        public async Task<ActionResult> GetFetusesByPregnancyRecordId([FromQuery]int pregnancyRecordId)
+        {
+            try
+            {
+                var fetuses = await _fetusService.GetFetusesByPregnancyRecordIdAsync(pregnancyRecordId);
+
+                if (fetuses == null || !fetuses.Any())
+                {
+                    return NotFound(new
+                    {
+                        success = false,
+                        message = "No fetuses found for this pregnancy record"
+                    });
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Fetuses retrieved successfully",
+                    data = fetuses
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Failed to retrieve fetuses",
+                    error = ex.Message
+                });
+            }
+        }
+
+        [Authorize(Roles = "Member")]
+        [HttpPost("FetusMeasurements")]
+        public async Task<ActionResult> CreateFetusMeasurement([FromQuery]int fetusId, [FromBody] FetusMeasurementRequest request)
+        {
+            try
+            {
+                var createdMeasurement = await _fetusService.CreateFetusMeasurementAsync(request, fetusId);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Fetus measurement created successfully",
+                    data = createdMeasurement
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Failed to create fetus measurement",
+                    error = ex.Message
+                });
             }
         }
     }

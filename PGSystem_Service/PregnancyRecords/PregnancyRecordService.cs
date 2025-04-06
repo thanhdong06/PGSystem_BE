@@ -34,7 +34,7 @@ namespace PGSystem_Service.PregnancyRecords
             entity.MemberMemberID = request.MemberMemberID;
             entity.StartDate = request.StartDate ?? DateOnly.FromDateTime(DateTime.Now);
             entity.DueDate = entity.StartDate.AddDays(280);
-            entity.Status = request.Status;
+            entity.Status = "Đang theo dõi";
             entity.CreateAt = entity.UpdateAt = DateTime.Now;
 
             var createdRecord = await _pregnancyRepository.AddAsync(entity);

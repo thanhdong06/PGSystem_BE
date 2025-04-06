@@ -25,6 +25,7 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             MemberResponseProfile();
             MembertoUserProfile();
             FetusProfile();
+            FetusMeasurementProfile();
         }
         private void UserMappingProfile()
         {
@@ -114,7 +115,14 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         private void FetusProfile()
         {
             CreateMap<Fetus, FetusResponse>();
+            CreateMap<FetusRequest, Fetus>();
+            CreateMap<FetusRequestFPR, Fetus>();
+        }
 
+        private void FetusMeasurementProfile()
+        {
+            CreateMap<FetusMeasurement, FetusMeasurementResponse>();
+            CreateMap<FetusMeasurementRequest, FetusMeasurement>();
         }
     }
 }

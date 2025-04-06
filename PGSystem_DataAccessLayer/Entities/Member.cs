@@ -25,7 +25,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public ICollection<Blog> Blogs { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Reminder> Reminders { get; set; }
-        public PregnancyRecord PregnancyRecord { get; set; }
+        public ICollection<PregnancyRecord> PregnancyRecord { get; set; }
 
         public bool IsDeleted { get; set; }
         public string Status { get; set; } = "Pending"; // Pending | Paid | Failed

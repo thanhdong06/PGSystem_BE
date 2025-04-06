@@ -11,6 +11,7 @@ namespace PGSystem_Repository.PregnancyRecords
     {
         Task<PregnancyRecord> AddAsync(PregnancyRecord entity);
         Task<List<PregnancyRecord>> GetPregnancyRecordByMemberIDAsync(int memberId);
+        Task<PregnancyRecord?> GetByIdAsync(int id);
         void Delete(List<PregnancyRecord> pregnancyRecords);
     }
 }

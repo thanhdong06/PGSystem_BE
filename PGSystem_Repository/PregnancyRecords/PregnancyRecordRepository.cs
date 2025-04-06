@@ -31,6 +31,11 @@ namespace PGSystem_Repository.PregnancyRecords
                 .Where(r => r.MemberMemberID == memberId)
                 .ToListAsync();
         }
+        public async Task<PregnancyRecord?> GetByIdAsync(int id)
+        {
+            return await _context.PregnancyRecords.FirstOrDefaultAsync(p => p.PID == id);
+        }
+
         public void Delete(List<PregnancyRecord> pregnancyRecords)
         {
             _context.PregnancyRecords.RemoveRange(pregnancyRecords);

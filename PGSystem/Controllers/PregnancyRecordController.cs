@@ -44,7 +44,7 @@ namespace PGSystem.Controllers
 
         [Authorize(Roles = "Member")]
         [HttpGet("Records")]
-        public async Task<ActionResult<JsonResponse<string>>> GetPregnancyRecords()
+        public async Task<ActionResult> GetPregnancyRecords()
         {
             try
             {
@@ -56,17 +56,21 @@ namespace PGSystem.Controllers
 
                 var records = await _pregnancyRecordService.GetByMemberIdAsync(memberId);
 
-                var jsonData = JsonSerializer.Serialize(records, new JsonSerializerOptions
+                if (records == null || !records.Any())
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = true
-                });
+                    return NotFound(new { message = "No records found for the given MemberId." });
+                }
 
-                return Ok(new JsonResponse<string>(null, 200, jsonData));
+                return Ok(new
+                {
+                    success = true,
+                    message = "Pregnancy records retrieved successfully",
+                    data = records
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new JsonResponse<string>("Error occurred", 400, ex.Message));
+                return BadRequest(new { message = "Error occurred", error = ex.Message });
             }
         }
     }

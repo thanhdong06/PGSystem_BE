@@ -125,9 +125,9 @@ namespace PGSystem_DataAccessLayer.DBContext
                 .WithMany(ms => ms.Members)
                 .HasForeignKey(m => m.MembershipID);
             modelBuilder.Entity<Member>()
-                .HasOne(m => m.PregnancyRecord)
+                .HasMany(m => m.PregnancyRecord)
                 .WithOne(p => p.Member)
-                .HasForeignKey<PregnancyRecord>(p => p.MemberMemberID)
+                .HasForeignKey(p => p.MemberMemberID)
                 .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<Membership>()
