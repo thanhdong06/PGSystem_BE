@@ -127,5 +127,28 @@ namespace PGSystem.Controllers
             return Ok(members);
         }
 
+        [HttpGet("subcriptions")]
+        public async Task<IActionResult> GetAllMemberSubscriptions()
+        {
+            try
+            {
+                var result = await _adminService.GetAllMemberSubscriptionsAsync();
+                return Ok(new
+                {
+                    success = true,
+                    message = "Successfully retrieved member subscriptions",
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Failed to retrieve member subscriptions",
+                    error = ex.Message
+                });
+            }
+        }
     }
 }

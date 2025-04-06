@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PGSystem_DataAccessLayer.DBContext;
 
@@ -11,9 +12,11 @@ using PGSystem_DataAccessLayer.DBContext;
 namespace PGSystem_DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250406061254_UpdateMemberPregnancy")]
+    partial class UpdateMemberPregnancy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -414,34 +417,6 @@ namespace PGSystem_DataAccessLayer.Migrations
                     b.ToTable("Reminders");
                 });
 
-            modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.Thresholds", b =>
-                {
-                    b.Property<int>("ThresholdsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ThresholdsId"));
-
-                    b.Property<decimal>("MaxValue")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<string>("MeasurementType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("MinValue")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<string>("WarningMessage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ThresholdsId");
-
-                    b.ToTable("Thresholds");
-                });
-
             modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.TransactionEntity", b =>
                 {
                     b.Property<int>("TransactionID")
@@ -519,7 +494,7 @@ namespace PGSystem_DataAccessLayer.Migrations
                             Password = "12345",
                             Phone = "0123456789",
                             Role = "Admin",
-                            UpdateAt = new DateTime(2025, 4, 6, 14, 47, 40, 663, DateTimeKind.Local).AddTicks(6963)
+                            UpdateAt = new DateTime(2025, 4, 6, 13, 12, 53, 62, DateTimeKind.Local).AddTicks(3658)
                         });
                 });
 

@@ -24,6 +24,8 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             MemberMappingProfile();
             MemberResponseProfile();
             MembertoUserProfile();
+            FetusProfile();
+            FetusMeasurementProfile();
         }
         private void UserMappingProfile()
         {
@@ -48,8 +50,9 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
         }
         private void PregnancyRecordMappingProfile()
         {
-            CreateMap<PregnancyRecordRequest, PregnancyRecord>();
-               
+            CreateMap<PregnancyRecordRequest, PregnancyRecord>()
+                .ForMember(dest => dest.Fetuses, opt => opt.Ignore());
+
             CreateMap<PregnancyRecord, PregnancyRecordResponse>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
                 .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.DueDate));
@@ -97,7 +100,6 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
                  .ForMember(dest => dest.UserUID, opt => opt.MapFrom(src => src.UserUID))
             .ForMember(dest => dest.MembershipID, opt => opt.MapFrom(src => src.NewMembershipID));
 
-            // Mapping từ Member sang MemberResponse
             CreateMap<Member, MemberResponse>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserUID));
 
@@ -108,6 +110,19 @@ namespace PGSystem_DataAccessLayer.MappingAndPaging
             CreateMap<Member, DeleteMemberResponse>()
                 .ForMember(dest => dest.UserUID, opt => opt.MapFrom(src => src.UserUID))
                 .ForMember(dest => dest.Message, opt => opt.MapFrom(src => "Member successfully deleted and converted to User"));
+        }
+
+        private void FetusProfile()
+        {
+            CreateMap<Fetus, FetusResponse>();
+            CreateMap<FetusRequest, Fetus>();
+            CreateMap<FetusRequestFPR, Fetus>();
+        }
+
+        private void FetusMeasurementProfile()
+        {
+            CreateMap<FetusMeasurement, FetusMeasurementResponse>();
+            CreateMap<FetusMeasurementRequest, FetusMeasurement>();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace PGSystem_Repository.TransactionRepository
         }
         public async Task<List<TransactionEntity>> GetAllTransactionsAsync()
         {
-            return await _context.Transactions.ToListAsync();
+            return await _context.Transactions.Where(t=> t.Status == "Paid").ToListAsync();
         }
     }
 }

@@ -15,11 +15,14 @@ namespace PGSystem_DataAccessLayer.Entities
         public DateOnly DueDate { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
+        public string Status { get; set; }
         public int MemberMemberID { get; set; }
 
         public Member Member { get; set; }
         public ICollection<Alert> Alerts { get; set; }
         public ICollection<GrowthRecord> GrowthRecords { get; set; } = new List<GrowthRecord>();
         public ICollection<PregnancyGrowthReport> PregnancyGrowthReports { get; set; }
+        public ICollection<Fetus> Fetuses { get; set; } = new List<Fetus>();
+
     }
 }

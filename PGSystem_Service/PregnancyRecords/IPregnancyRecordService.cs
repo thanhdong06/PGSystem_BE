@@ -11,5 +11,8 @@ namespace PGSystem_Service.PregnancyRecords
     public interface IPregnancyRecordService
     {
         Task<PregnancyRecordResponse> CreatePregnancyRecordAsync(PregnancyRecordRequest request);
+        Task<List<PregnancyRecordResponse>> GetByMemberIdAsync(int memberId);
+        Task<PregnancyRecordResponse> ClosePregnancyRecordAsync(int pregnancyRecordId, int memberId);
+
     }
 }

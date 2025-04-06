@@ -11,7 +11,10 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
         public int PID { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly DueDate { get; set; }
+        public string Status { get; set; }
         public DateTime CreateAt { get; set; }
         public int MemberMemberID { get; set; }
+        public List<FetusResponse> Fetuses { get; set; }
+
     }
 }

@@ -34,6 +34,9 @@ namespace PGSystem_DataAccessLayer.DBContext
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
+        public DbSet<Fetus> Fetuses { get; set; }
+        public DbSet<FetusMeasurement> FetusMeasurements { get; set; }
+        public DbSet<Thresholds> Thresholds{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -123,9 +126,9 @@ namespace PGSystem_DataAccessLayer.DBContext
                 .WithMany(ms => ms.Members)
                 .HasForeignKey(m => m.MembershipID);
             modelBuilder.Entity<Member>()
-                .HasOne(m => m.PregnancyRecord)
+                .HasMany(m => m.PregnancyRecord)
                 .WithOne(p => p.Member)
-                .HasForeignKey<PregnancyRecord>(p => p.MemberMemberID)
+                .HasForeignKey(p => p.MemberMemberID)
                 .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<Membership>()
@@ -186,7 +189,6 @@ namespace PGSystem_DataAccessLayer.DBContext
                 .HasForeignKey(r => r.MemberID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             // Configure User
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UID);
@@ -195,6 +197,53 @@ namespace PGSystem_DataAccessLayer.DBContext
             modelBuilder.Entity<TransactionEntity>()
             .Property(t => t.Amount)
             .HasPrecision(18, 4);
+
+            // Configure Fetus
+            modelBuilder.Entity<Fetus>()
+                .HasKey(f => f.FetusId);
+
+            modelBuilder.Entity<Fetus>()
+                .HasOne(f => f.PregnancyRecord)
+                .WithMany(p => p.Fetuses)
+                .HasForeignKey(f => f.PregnancyRecordId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure FetusMeasurement
+            modelBuilder.Entity<FetusMeasurement>()
+                .HasKey(m => m.MeasurementId);
+
+            modelBuilder.Entity<FetusMeasurement>()
+                .HasOne(m => m.Fetus)
+                .WithMany(f => f.Measurements)
+                .HasForeignKey(m => m.FetusId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FetusMeasurement>()
+                .Property(m => m.Length)
+                .HasColumnType("decimal(10, 2)");
+
+            modelBuilder.Entity<FetusMeasurement>()
+                .Property(m => m.HeadCircumference)
+                .HasColumnType("decimal(10, 2)");
+
+            modelBuilder.Entity<FetusMeasurement>()
+                .Property(m => m.WeightEstimate)
+                .HasColumnType("decimal(10, 2)");
+
+            modelBuilder.Entity<Thresholds>()
+                .HasKey(t => t.ThresholdsId);
+
+            modelBuilder.Entity<Thresholds>()
+                .Property(t => t.MeasurementType)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Thresholds>()
+                .Property(t => t.MinValue)
+                .HasColumnType("decimal(10, 2)"); 
+            modelBuilder.Entity<Thresholds>()
+                .Property(t => t.MaxValue)
+                .HasColumnType("decimal(10, 2)"); 
         }
     }
 }

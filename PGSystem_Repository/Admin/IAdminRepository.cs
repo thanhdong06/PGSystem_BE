@@ -20,6 +20,7 @@ namespace PGSystem_Repository.Admin
         Task<Membership> GetByIdAsync(int id);
         Task UpdateAsync(Membership membership);
         Task<IEnumerable<Member>> GetAllMembersWithMembershipAsync();
+        Task<List<Member>> GetAllWithUserAndMembershipAsync();
 
     }
 }

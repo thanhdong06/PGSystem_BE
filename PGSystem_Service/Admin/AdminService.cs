@@ -108,6 +108,19 @@ namespace PGSystem_Service.Admin
         {
             return await _transactionRepository.GetAllTransactionsAsync();
         }
+
+        public async Task<List<AdminMembershipView>> GetAllMemberSubscriptionsAsync()
+        {
+            var members = await _adminRepository.GetAllWithUserAndMembershipAsync();
+
+            return members.Select(m => new AdminMembershipView
+            {
+                MemberID = m.MemberID,
+                FullName = m.User.FullName,
+                Email = m.User.Email,
+                MembershipName = m.Membership?.Name,
+            }).ToList();
+        }
     }
  }
 

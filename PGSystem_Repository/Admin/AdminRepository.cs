@@ -32,12 +32,13 @@ using System.Threading.Tasks;
                 var totalUsers = await _context.Users.CountAsync();
                 var totalAdmins = await _context.Users.CountAsync(u => u.Role == "Admin");
                 var totalMembers = await _context.Users.CountAsync(u => u.Role == "Member");
-
+            var totalTransaction = await _context.Transactions.CountAsync(u => u.Status == "Paid");
                 return new SystemReportResponse
                 {
                     TotalUsers = totalUsers,
                     TotalAdmins = totalAdmins,
                     TotalMembers = totalMembers,
+                    TotalTransactions = totalTransaction,
                     ReportDate = DateTime.UtcNow
                 };
 
@@ -90,6 +91,15 @@ using System.Threading.Tasks;
                 .Include(m => m.User)
                 .Include(m => m.Membership)
                 .Where(m => m.MembershipID != 0) // Lọc những thành viên có Membership
+                .ToListAsync();
+        }
+
+        public async Task<List<Member>> GetAllWithUserAndMembershipAsync()
+        {
+            return await _context.Members
+                .Where(m => !m.IsDeleted)
+                .Include(m => m.User)
+                .Include(m => m.Membership)
                 .ToListAsync();
         }
     }

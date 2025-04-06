@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PGSystem_DataAccessLayer.DBContext;
 
@@ -11,9 +12,11 @@ using PGSystem_DataAccessLayer.DBContext;
 namespace PGSystem_DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250406050717_updateFetus_FetusMeasurement")]
+    partial class updateFetus_FetusMeasurement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -350,7 +353,8 @@ namespace PGSystem_DataAccessLayer.Migrations
 
                     b.HasKey("PID");
 
-                    b.HasIndex("MemberMemberID");
+                    b.HasIndex("MemberMemberID")
+                        .IsUnique();
 
                     b.ToTable("PregnancyRecords");
                 });
@@ -412,34 +416,6 @@ namespace PGSystem_DataAccessLayer.Migrations
                     b.HasIndex("SID");
 
                     b.ToTable("Reminders");
-                });
-
-            modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.Thresholds", b =>
-                {
-                    b.Property<int>("ThresholdsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ThresholdsId"));
-
-                    b.Property<decimal>("MaxValue")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<string>("MeasurementType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("MinValue")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<string>("WarningMessage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ThresholdsId");
-
-                    b.ToTable("Thresholds");
                 });
 
             modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.TransactionEntity", b =>
@@ -519,7 +495,7 @@ namespace PGSystem_DataAccessLayer.Migrations
                             Password = "12345",
                             Phone = "0123456789",
                             Role = "Admin",
-                            UpdateAt = new DateTime(2025, 4, 6, 14, 47, 40, 663, DateTimeKind.Local).AddTicks(6963)
+                            UpdateAt = new DateTime(2025, 4, 6, 12, 7, 16, 735, DateTimeKind.Local).AddTicks(6957)
                         });
                 });
 
@@ -641,8 +617,8 @@ namespace PGSystem_DataAccessLayer.Migrations
             modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.PregnancyRecord", b =>
                 {
                     b.HasOne("PGSystem_DataAccessLayer.Entities.Member", "Member")
-                        .WithMany("PregnancyRecord")
-                        .HasForeignKey("MemberMemberID")
+                        .WithOne("PregnancyRecord")
+                        .HasForeignKey("PGSystem_DataAccessLayer.Entities.PregnancyRecord", "MemberMemberID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -695,7 +671,8 @@ namespace PGSystem_DataAccessLayer.Migrations
 
                     b.Navigation("Comments");
 
-                    b.Navigation("PregnancyRecord");
+                    b.Navigation("PregnancyRecord")
+                        .IsRequired();
 
                     b.Navigation("Reminders");
 
