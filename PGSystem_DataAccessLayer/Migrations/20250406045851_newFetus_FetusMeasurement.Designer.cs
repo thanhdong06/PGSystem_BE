@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PGSystem_DataAccessLayer.DBContext;
 
@@ -11,9 +12,11 @@ using PGSystem_DataAccessLayer.DBContext;
 namespace PGSystem_DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250406045851_newFetus_FetusMeasurement")]
+    partial class newFetus_FetusMeasurement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,64 +140,6 @@ namespace PGSystem_DataAccessLayer.Migrations
                     b.HasIndex("MemberID");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.Fetus", b =>
-                {
-                    b.Property<int>("FetusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FetusId"));
-
-                    b.Property<string>("Nickname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PregnancyRecordId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FetusId");
-
-                    b.HasIndex("PregnancyRecordId");
-
-                    b.ToTable("Fetuses");
-                });
-
-            modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.FetusMeasurement", b =>
-                {
-                    b.Property<int>("MeasurementId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MeasurementId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateOnly>("DateMeasured")
-                        .HasColumnType("date");
-
-                    b.Property<int>("FetusId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("HeadCircumference")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<decimal>("Length")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("WeightEstimate")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.HasKey("MeasurementId");
-
-                    b.HasIndex("FetusId");
-
-                    b.ToTable("FetusMeasurements");
                 });
 
             modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.GrowthRecord", b =>
@@ -492,7 +437,7 @@ namespace PGSystem_DataAccessLayer.Migrations
                             Password = "12345",
                             Phone = "0123456789",
                             Role = "Admin",
-                            UpdateAt = new DateTime(2025, 4, 6, 12, 7, 16, 735, DateTimeKind.Local).AddTicks(6957)
+                            UpdateAt = new DateTime(2025, 4, 6, 11, 58, 50, 395, DateTimeKind.Local).AddTicks(9546)
                         });
                 });
 
@@ -546,28 +491,6 @@ namespace PGSystem_DataAccessLayer.Migrations
                     b.Navigation("Blog");
 
                     b.Navigation("Member");
-                });
-
-            modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.Fetus", b =>
-                {
-                    b.HasOne("PGSystem_DataAccessLayer.Entities.PregnancyRecord", "PregnancyRecord")
-                        .WithMany("Fetuses")
-                        .HasForeignKey("PregnancyRecordId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("PregnancyRecord");
-                });
-
-            modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.FetusMeasurement", b =>
-                {
-                    b.HasOne("PGSystem_DataAccessLayer.Entities.Fetus", "Fetus")
-                        .WithMany("Measurements")
-                        .HasForeignKey("FetusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Fetus");
                 });
 
             modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.GrowthRecord", b =>
@@ -657,11 +580,6 @@ namespace PGSystem_DataAccessLayer.Migrations
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.Fetus", b =>
-                {
-                    b.Navigation("Measurements");
-                });
-
             modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.Member", b =>
                 {
                     b.Navigation("Blogs");
@@ -684,8 +602,6 @@ namespace PGSystem_DataAccessLayer.Migrations
             modelBuilder.Entity("PGSystem_DataAccessLayer.Entities.PregnancyRecord", b =>
                 {
                     b.Navigation("Alerts");
-
-                    b.Navigation("Fetuses");
 
                     b.Navigation("GrowthRecords");
 

@@ -34,6 +34,8 @@ namespace PGSystem_DataAccessLayer.DBContext
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
+        public DbSet<Fetus> Fetuses { get; set; }
+        public DbSet<FetusMeasurement> FetusMeasurements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -186,7 +188,6 @@ namespace PGSystem_DataAccessLayer.DBContext
                 .HasForeignKey(r => r.MemberID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             // Configure User
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UID);
@@ -195,6 +196,38 @@ namespace PGSystem_DataAccessLayer.DBContext
             modelBuilder.Entity<TransactionEntity>()
             .Property(t => t.Amount)
             .HasPrecision(18, 4);
+
+            // Configure Fetus
+            modelBuilder.Entity<Fetus>()
+                .HasKey(f => f.FetusId);
+
+            modelBuilder.Entity<Fetus>()
+                .HasOne(f => f.PregnancyRecord)
+                .WithMany(p => p.Fetuses)
+                .HasForeignKey(f => f.PregnancyRecordId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure FetusMeasurement
+            modelBuilder.Entity<FetusMeasurement>()
+                .HasKey(m => m.MeasurementId);
+
+            modelBuilder.Entity<FetusMeasurement>()
+                .HasOne(m => m.Fetus)
+                .WithMany(f => f.Measurements)
+                .HasForeignKey(m => m.FetusId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FetusMeasurement>()
+                .Property(m => m.Length)
+                .HasColumnType("decimal(10, 2)");
+
+            modelBuilder.Entity<FetusMeasurement>()
+                .Property(m => m.HeadCircumference)
+                .HasColumnType("decimal(10, 2)");
+
+            modelBuilder.Entity<FetusMeasurement>()
+                .Property(m => m.WeightEstimate)
+                .HasColumnType("decimal(10, 2)");
         }
     }
 }

@@ -27,6 +27,7 @@ namespace PGSystem_Repository.PregnancyRecords
         public async Task<List<PregnancyRecord>> GetPregnancyRecordByMemberIDAsync(int memberId)
         {
             return await _context.PregnancyRecords
+                .Include(r => r.Fetuses)
                 .Where(r => r.MemberMemberID == memberId)
                 .ToListAsync();
         }
