@@ -51,5 +51,11 @@ namespace PGSystem_Repository.Fetuss
             _context.FetusMeasurements.Update(fetusMeasurement);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<FetusMeasurement>> GetAllMeasurementByFetusId(int fetusId)
+        {
+            return await _context.FetusMeasurements.Where(f => f.FetusId == fetusId).ToListAsync();
+
+        }
     }
 }

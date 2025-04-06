@@ -147,5 +147,48 @@ namespace PGSystem.Controllers
             }
         }
 
+        [Authorize(Roles = "Member")]
+        [HttpGet("Measurements/Fetus")]
+        public async Task<ActionResult> GetFetusMeasurements([FromQuery] int fetusId)
+        {
+            try
+            {
+                var measurements = await _fetusService.GetFetusMeasurementsByFetusIdAsync(fetusId);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Fetus measurements list successfully",
+                    data = measurements.Select(m => new
+                    {
+                        m.MeasurementId,
+                        m.DateMeasured,
+                        m.Length,
+                        m.HeadCircumference,
+                        m.WeightEstimate,
+                        m.CreatedAt,
+                        m.UpdatedAt
+                    })
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Failed to retrieve fetus measurements",
+                    error = ex.Message
+                });
+            }
+        }
+
     }
 }

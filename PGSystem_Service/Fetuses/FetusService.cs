@@ -94,5 +94,17 @@ namespace PGSystem_Service.Fetuses
 
             return existingMeasurement;
         }
+
+        public async Task<List<FetusMeasurement>> GetFetusMeasurementsByFetusIdAsync(int fetusId)
+        {
+            var measurements = await _fetusRepository.GetAllMeasurementByFetusId(fetusId);
+
+            if (measurements == null || !measurements.Any())
+            {
+                throw new KeyNotFoundException("No measurements found with this fetusId");
+            }
+
+            return measurements;
+        }
     }
 }

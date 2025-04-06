@@ -16,5 +16,6 @@ namespace PGSystem_Repository.Fetuss
         Task<bool> ExistsAsync(Expression<Func<Fetus, bool>> predicate);
         Task<FetusMeasurement> GetMeasurementByIdAsync(int measurementId);
         Task UpdateAsync(FetusMeasurement fetusMeasurement);
+        Task<List<FetusMeasurement>> GetAllMeasurementByFetusId(int fetusId);
     }
 }
