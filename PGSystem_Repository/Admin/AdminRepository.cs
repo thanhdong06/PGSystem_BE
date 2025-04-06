@@ -93,5 +93,14 @@ using System.Threading.Tasks;
                 .Where(m => m.MembershipID != 0) // Lọc những thành viên có Membership
                 .ToListAsync();
         }
+
+        public async Task<List<Member>> GetAllWithUserAndMembershipAsync()
+        {
+            return await _context.Members
+                .Where(m => !m.IsDeleted)
+                .Include(m => m.User)
+                .Include(m => m.Membership)
+                .ToListAsync();
+        }
     }
     }

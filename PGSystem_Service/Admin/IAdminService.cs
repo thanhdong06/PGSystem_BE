@@ -20,6 +20,8 @@ namespace PGSystem_Service.Admin
         Task<MembershipResponse> UpdateMembershipAsync(int id, MembershipsRequest request);
         Task<IEnumerable<MemberResponse>> GetAllMembersWithMembershipAsync();
         Task<List<TransactionEntity>> GetAllTransactionsAsync();
+        Task<List<AdminMembershipView>> GetAllMemberSubscriptionsAsync();
+
 
 
     }
