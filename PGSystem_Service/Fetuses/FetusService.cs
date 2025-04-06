@@ -76,5 +76,23 @@ namespace PGSystem_Service.Fetuses
 
             return _mapper.Map<FetusMeasurementResponse>(createdMeasurement);
         }
+
+        public async Task<FetusMeasurement> UpdateFetusMeasurementAsync(int measurementId, FetusMeasurementUpdateRequest request)
+        {
+            var existingMeasurement = await _fetusRepository.GetMeasurementByIdAsync(measurementId);
+            if (existingMeasurement == null)
+            {
+                throw new KeyNotFoundException("Measurement not found");
+            }
+
+            existingMeasurement.Length = request.Length;
+            existingMeasurement.HeadCircumference = request.HeadCircumference;
+            existingMeasurement.WeightEstimate = request.WeightEstimate;
+            existingMeasurement.UpdatedAt = DateTime.Now;
+
+            await _fetusRepository.UpdateAsync(existingMeasurement);
+
+            return existingMeasurement;
+        }
     }
 }

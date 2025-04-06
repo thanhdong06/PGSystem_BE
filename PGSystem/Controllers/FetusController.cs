@@ -104,5 +104,48 @@ namespace PGSystem.Controllers
                 });
             }
         }
+
+        [Authorize(Roles = "Member")]
+        [HttpPut("Measurements")]
+        public async Task<ActionResult> UpdateFetusMeasurement([FromQuery]int measurementId, [FromBody] FetusMeasurementUpdateRequest request)
+        {
+            try
+            {
+                var updatedMeasurement = await _fetusService.UpdateFetusMeasurementAsync(measurementId, request);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Fetus measurement updated successfully",
+                    data = new
+                    {
+                        updatedMeasurement.MeasurementId,
+                        updatedMeasurement.Length,
+                        updatedMeasurement.HeadCircumference,
+                        updatedMeasurement.WeightEstimate,
+                        updatedMeasurement.DateMeasured,
+                        updatedMeasurement.UpdatedAt
+                    }
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Failed to update fetus measurement",
+                    error = ex.Message
+                });
+            }
+        }
+
     }
 }

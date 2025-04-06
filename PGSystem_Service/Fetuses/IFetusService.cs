@@ -14,5 +14,6 @@ namespace PGSystem_Service.Fetuses
         Task<FetusResponse> CreateFetusAsync(FetusRequest request);
         Task<List<FetusResponse>> GetFetusesByPregnancyRecordIdAsync(int pregnancyRecordId);
         Task<FetusMeasurementResponse> CreateFetusMeasurementAsync(FetusMeasurementRequest request, int fetusId);
+        Task<FetusMeasurement> UpdateFetusMeasurementAsync(int measurementId, FetusMeasurementUpdateRequest request);
     }
 }
