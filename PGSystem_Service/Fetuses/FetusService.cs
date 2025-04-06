@@ -78,6 +78,23 @@ namespace PGSystem_Service.Fetuses
             var measuredDateTime = request.DateMeasured.ToDateTime(TimeOnly.MinValue);
             var week = (measuredDateTime - startDateTime).Days / 7;
 
+            var previousMeasurement = await _fetusRepository.GetLatestBeforeWeekAsync(fetusId, week);
+            if (previousMeasurement != null)
+            {
+                if (request.Length < previousMeasurement.Length)
+                {
+                    throw new InvalidOperationException("Chiều dài không được nhỏ hơn lần đo tuần trước.");
+                }
+                if (request.HeadCircumference < previousMeasurement.HeadCircumference)
+                {
+                    throw new InvalidOperationException("Vòng đầu không được nhỏ hơn lần đo tuần trước.");
+                }
+                if (request.WeightEstimate < previousMeasurement.WeightEstimate)
+                {
+                    throw new InvalidOperationException("Cân nặng ước tính không được nhỏ hơn lần đo tuần trước.");
+                }
+            }
+
             var lengthThreshold = await _thresholdRepository.GetThresholdByNameAsync("Length", week);
             var headCircumferenceThreshold = await _thresholdRepository.GetThresholdByNameAsync("HeadCircumference", week);
             var weightEstimateThreshold = await _thresholdRepository.GetThresholdByNameAsync("WeightEstimate", week);
