@@ -57,12 +57,12 @@ namespace PGSystem_Service.Fetuses
 
         public async Task<FetusMeasurementResponse> CreateFetusMeasurementAsync(FetusMeasurementRequest request, int fetusId)
         {
-            var fetus = await _fetusRepository.(fetusId);
-            if (fetus == null)
+            var isDuplicate = await _fetusRepository.ExistsAsync(
+                f => f.FetusId == fetusId);
+            if (isDuplicate)
             {
-                
+                throw new Exception("A fetus with this ID Not found.");
             }
-
             var fetusMeasurement = new FetusMeasurement
             {
                 Length = request.Length,
