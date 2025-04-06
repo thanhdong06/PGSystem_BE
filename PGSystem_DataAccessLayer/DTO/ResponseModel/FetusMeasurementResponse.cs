@@ -16,5 +16,8 @@ namespace PGSystem_DataAccessLayer.DTO.ResponseModel
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int FetusId { get; set; }
+
+        public List<string> Warnings { get; set; } = new List<string>();
+
     }
 }

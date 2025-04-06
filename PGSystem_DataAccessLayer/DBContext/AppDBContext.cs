@@ -36,6 +36,7 @@ namespace PGSystem_DataAccessLayer.DBContext
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<Fetus> Fetuses { get; set; }
         public DbSet<FetusMeasurement> FetusMeasurements { get; set; }
+        public DbSet<Thresholds> Thresholds{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -228,6 +229,21 @@ namespace PGSystem_DataAccessLayer.DBContext
             modelBuilder.Entity<FetusMeasurement>()
                 .Property(m => m.WeightEstimate)
                 .HasColumnType("decimal(10, 2)");
+
+            modelBuilder.Entity<Thresholds>()
+                .HasKey(t => t.ThresholdsId);
+
+            modelBuilder.Entity<Thresholds>()
+                .Property(t => t.MeasurementType)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Thresholds>()
+                .Property(t => t.MinValue)
+                .HasColumnType("decimal(10, 2)"); 
+            modelBuilder.Entity<Thresholds>()
+                .Property(t => t.MaxValue)
+                .HasColumnType("decimal(10, 2)"); 
         }
     }
 }

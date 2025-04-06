@@ -33,6 +33,10 @@ namespace PGSystem_Repository.Fetuss
         public async Task<bool> ExistsAsync(Expression<Func<Fetus, bool>> predicate)
         {
             return await _context.Fetuses.AnyAsync(predicate);
+        } 
+        public async Task<bool> ExistsDateAsync(Expression<Func<FetusMeasurement, bool>> predicate)
+        {
+            return await _context.FetusMeasurements.AnyAsync(predicate);
         }
         public async Task<FetusMeasurement> AddMeasurementAsync(FetusMeasurement fetus)
         {

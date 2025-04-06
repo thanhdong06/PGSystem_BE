@@ -24,6 +24,7 @@ using PGSystem_Service.Memberships;
 using PGSystem_Repository.TransactionRepository;
 using PGSystem_Repository.Fetuss;
 using PGSystem_Service.Fetuses;
+using PGSystem_Repository.ThresholdRepository;
 
 namespace PGSystem.Configuration
 {
@@ -58,6 +59,7 @@ namespace PGSystem.Configuration
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IFetusRepository, FetusRepository>();
             services.AddScoped<IFetusService, FetusService>();
+            services.AddScoped<IThresholdRepository, ThresholdRepository>();
 
             return services;
         }
