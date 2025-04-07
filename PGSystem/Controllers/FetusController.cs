@@ -125,6 +125,7 @@ namespace PGSystem.Controllers
                         updatedMeasurement.WeightEstimate,
                         updatedMeasurement.DateMeasured,
                         updatedMeasurement.UpdatedAt,
+                        updatedMeasurement.Week,
                         warnings = updatedMeasurement.Warnings ?? new List<string>()
                     }
                 });

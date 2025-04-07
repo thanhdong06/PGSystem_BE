@@ -219,6 +219,7 @@ namespace PGSystem_Service.Fetuses
 
             await _fetusRepository.UpdateAsync(existingMeasurement);
             var response = _mapper.Map<FetusMeasurementResponse>(existingMeasurement);
+            response.Week = existingMeasurement.Week;
             if (warnings.Any())
             {
                 response.Warnings = warnings;
