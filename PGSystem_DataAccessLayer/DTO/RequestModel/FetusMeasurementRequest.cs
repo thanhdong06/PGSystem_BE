@@ -11,6 +11,6 @@ namespace PGSystem_DataAccessLayer.DTO.RequestModel
         public double Length { get; set; }
         public double HeadCircumference { get; set; }
         public double WeightEstimate { get; set; }
-        public DateOnly DateMeasured { get; set; }
+        public int Week { get; set; }
     }
 }

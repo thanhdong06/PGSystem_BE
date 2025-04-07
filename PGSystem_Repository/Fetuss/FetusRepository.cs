@@ -67,17 +67,17 @@ namespace PGSystem_Repository.Fetuss
             return await _context.FetusMeasurements.Where(f => f.FetusId == fetusId).ToListAsync();
 
         }
-        public async Task<FetusMeasurement?> GetLatestBeforeWeekAsync(int fetusId, DateOnly currentDate, int excludeMeasurementId)
+        public async Task<FetusMeasurement?> GetLatestBeforeWeekAsync(int fetusId, int currentWeek, int excludeMeasurementId)
         {
             return await _context.FetusMeasurements
-                .Where(m => m.FetusId == fetusId && m.DateMeasured < currentDate && m.MeasurementId != excludeMeasurementId)
-                .OrderByDescending(m => m.DateMeasured)
+                .Where(m => m.FetusId == fetusId && m.Week < currentWeek && m.MeasurementId != excludeMeasurementId)
+                .OrderByDescending(m => m.Week)
                 .FirstOrDefaultAsync();
         }
-        public async Task<FetusMeasurement?> GetPreviousMeasurementAsync(int fetusId, DateOnly measuredDate)
+        public async Task<FetusMeasurement?> GetPreviousMeasurementAsync(int fetusId, int currentWeek)
         {
             return await _context.FetusMeasurements
-                .Where(m => m.FetusId == fetusId && m.DateMeasured < measuredDate)
+                .Where(m => m.FetusId == fetusId && m.Week < currentWeek)
                 .OrderByDescending(m => m.DateMeasured)
                 .FirstOrDefaultAsync();
         }
