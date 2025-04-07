@@ -117,7 +117,7 @@ namespace PGSystem_Service.Users
                     UID = int.Parse(userId),
                     Phone = phone,
                     Role = role
-                }, 30); // Access Token 30 phút
+                }, 1440); // Access Token 1 ngày
 
                 return newAccessToken;
             }
