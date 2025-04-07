@@ -19,8 +19,9 @@ namespace PGSystem_Repository.Admin
         Task<bool> DeleteMembership(int MID);
         Task<Membership> GetByIdAsync(int id);
         Task UpdateAsync(Membership membership);
-        Task<IEnumerable<Member>> GetAllMembersWithMembershipAsync();
+      //  Task<IEnumerable<Member>> GetAllMembersWithMembershipAsync();
         Task<List<Member>> GetAllWithUserAndMembershipAsync();
+        Task<List<Member>> GetAllWithUserWithMembershipAsync();
 
     }
 }

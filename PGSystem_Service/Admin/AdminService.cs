@@ -101,8 +101,16 @@ namespace PGSystem_Service.Admin
 
         public async Task<IEnumerable<MemberResponse>> GetAllMembersWithMembershipAsync()
         {
-            var members = await _adminRepository.GetAllMembersWithMembershipAsync();
-            return _mapper.Map<IEnumerable<MemberResponse>>(members);
+            var members = await _adminRepository.GetAllWithUserWithMembershipAsync();
+            return members.Select(m => new MemberResponse
+            {
+                MemberID = m.MemberID,
+                UserId= m.UserUID,
+                MembershipId = m.MembershipID,
+                UserName = m.User.FullName,
+                MembershipName = m.Membership?.Name,
+                IsDeleted = m.IsDeleted,
+            }).ToList();
         }
         public async Task<List<TransactionEntity>> GetAllTransactionsAsync()
         {

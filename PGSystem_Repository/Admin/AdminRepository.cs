@@ -85,15 +85,23 @@ using System.Threading.Tasks;
                 await _context.SaveChangesAsync();
             }
 
-        public async Task<IEnumerable<Member>> GetAllMembersWithMembershipAsync()
+        /*  public async Task<IEnumerable<Member>> GetAllMembersWithMembershipAsync()
+          {
+              return await _context.Members
+                  .Include(m => m.User)
+                  .Include(m => m.Membership)
+                  .Where(m => m.MembershipID != 0) // Lọc những thành viên có Membership
+                  .ToListAsync();
+          }*/
+        public async Task<List<Member>> GetAllWithUserWithMembershipAsync()
         {
             return await _context.Members
+                .Where(m => !m.IsDeleted && m.MembershipID != 0 )
                 .Include(m => m.User)
                 .Include(m => m.Membership)
-                .Where(m => m.MembershipID != 0) // Lọc những thành viên có Membership
+                
                 .ToListAsync();
         }
-
         public async Task<List<Member>> GetAllWithUserAndMembershipAsync()
         {
             return await _context.Members
