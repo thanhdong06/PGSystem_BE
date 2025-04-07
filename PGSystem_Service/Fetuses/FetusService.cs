@@ -62,15 +62,42 @@ namespace PGSystem_Service.Fetuses
 
         public async Task<FetusMeasurementResponse> CreateFetusMeasurementAsync(FetusMeasurementRequest request, int fetusId)
         {
-            var isDuplicate = await _fetusRepository.ExistsDateAsync(f => f.DateMeasured == request.DateMeasured);
+            var isDuplicate = await _fetusRepository.ExistsDateAsync(f => f.Week == request.Week && f.FetusId == fetusId);
             if (isDuplicate)
             {
-                throw new Exception("You have finished measuring today!");
+                throw new Exception("You have finished measuring this week!");
             }
 
-            var lengthThreshold = await _thresholdRepository.GetThresholdByNameAsync("Length");
-            var headCircumferenceThreshold = await _thresholdRepository.GetThresholdByNameAsync("HeadCircumference");
-            var weightEstimateThreshold = await _thresholdRepository.GetThresholdByNameAsync("WeightEstimate");
+            var fetus = await _fetusRepository.GetFetusWithPregnancyAsync(fetusId);
+            if (fetus == null || fetus.PregnancyRecord == null)
+            {
+                throw new Exception("Fetus or pregnancy record not found.");
+            }
+
+            //var startDateTime = fetus.PregnancyRecord.StartDate.ToDateTime(TimeOnly.MinValue);
+            //var measuredDateTime = request.DateMeasured.ToDateTime(TimeOnly.MinValue);
+            //var week = (measuredDateTime - startDateTime).Days / 7;
+
+            var previousMeasurement = await _fetusRepository.GetPreviousMeasurementAsync(fetusId, request.Week);
+            if (previousMeasurement != null)
+            {
+                if (request.Length < previousMeasurement.Length)
+                {
+                    throw new InvalidOperationException("Chiều dài không được nhỏ hơn lần đo tuần trước.");
+                }
+                if (request.HeadCircumference < previousMeasurement.HeadCircumference)
+                {
+                    throw new InvalidOperationException("Vòng đầu không được nhỏ hơn lần đo tuần trước.");
+                }
+                if (request.WeightEstimate < previousMeasurement.WeightEstimate)
+                {
+                    throw new InvalidOperationException("Cân nặng ước tính không được nhỏ hơn lần đo tuần trước.");
+                }
+            }
+
+            var lengthThreshold = await _thresholdRepository.GetThresholdByNameAsync("Length", request.Week);
+            var headCircumferenceThreshold = await _thresholdRepository.GetThresholdByNameAsync("HeadCircumference", request.Week);
+            var weightEstimateThreshold = await _thresholdRepository.GetThresholdByNameAsync("WeightEstimate", request.Week);
 
             var warnings = new List<string>();
 
@@ -101,9 +128,10 @@ namespace PGSystem_Service.Fetuses
             var fetusMeasurement = new FetusMeasurement
             {
                 Length = request.Length,
+                DateMeasured = DateOnly.FromDateTime(DateTime.Today),
                 HeadCircumference = request.HeadCircumference,
                 WeightEstimate = request.WeightEstimate,
-                DateMeasured = request.DateMeasured,
+                Week = request.Week,
                 FetusId = fetusId
             };
 
@@ -125,9 +153,38 @@ namespace PGSystem_Service.Fetuses
             {
                 throw new KeyNotFoundException("Measurement not found");
             }
-            var lengthThreshold = await _thresholdRepository.GetThresholdByNameAsync("Length");
-            var headCircumferenceThreshold = await _thresholdRepository.GetThresholdByNameAsync("HeadCircumference");
-            var weightEstimateThreshold = await _thresholdRepository.GetThresholdByNameAsync("WeightEstimate");
+
+            var fetus = await _fetusRepository.GetFetusWithPregnancyAsync(existingMeasurement.FetusId);
+            if (fetus == null || fetus.PregnancyRecord == null)
+            {
+                throw new Exception("Fetus or Pregnancy record not found");
+            }
+            //var startDateTime = fetus.PregnancyRecord.StartDate.ToDateTime(TimeOnly.MinValue);
+            //var measuredDateTime = existingMeasurement.DateMeasured.ToDateTime(TimeOnly.MinValue);
+            //var currentWeek = (measuredDateTime - startDateTime).Days / 7;
+
+            var currentWeek = existingMeasurement.Week;
+            var previousMeasurement = await _fetusRepository.GetLatestBeforeWeekAsync(fetus.FetusId, currentWeek, measurementId);
+            if (previousMeasurement != null)
+            {
+                if (request.Length < previousMeasurement.Length)
+                {
+                    throw new InvalidOperationException("Chiều dài không được nhỏ hơn lần đo tuần trước.");
+                }
+                if (request.HeadCircumference < previousMeasurement.HeadCircumference)
+                {
+                    throw new InvalidOperationException("Vòng đầu không được nhỏ hơn lần đo tuần trước.");
+                }
+                if (request.WeightEstimate < previousMeasurement.WeightEstimate)
+                {
+                    throw new InvalidOperationException("Cân nặng ước tính không được nhỏ hơn lần đo tuần trước.");
+                }
+            }
+
+
+            var lengthThreshold = await _thresholdRepository.GetThresholdByNameAsync("Length", currentWeek);
+            var headCircumferenceThreshold = await _thresholdRepository.GetThresholdByNameAsync("HeadCircumference", currentWeek);
+            var weightEstimateThreshold = await _thresholdRepository.GetThresholdByNameAsync("WeightEstimate", currentWeek);
 
             var warnings = new List<string>();
 
@@ -162,6 +219,7 @@ namespace PGSystem_Service.Fetuses
 
             await _fetusRepository.UpdateAsync(existingMeasurement);
             var response = _mapper.Map<FetusMeasurementResponse>(existingMeasurement);
+            response.Week = existingMeasurement.Week;
             if (warnings.Any())
             {
                 response.Warnings = warnings;

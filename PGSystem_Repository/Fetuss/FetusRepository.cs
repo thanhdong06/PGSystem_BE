@@ -30,6 +30,12 @@ namespace PGSystem_Repository.Fetuss
             return await _context.Fetuses.Where(f => f.PregnancyRecordId == pregnancyRecordId).ToListAsync();
 
         }
+        public async Task<Fetus> GetFetusWithPregnancyAsync(int fetusId)
+        {
+            return await _context.Fetuses
+                .Include(f => f.PregnancyRecord)
+                .FirstOrDefaultAsync(f => f.FetusId == fetusId);
+        }
         public async Task<bool> ExistsAsync(Expression<Func<Fetus, bool>> predicate)
         {
             return await _context.Fetuses.AnyAsync(predicate);
@@ -60,6 +66,20 @@ namespace PGSystem_Repository.Fetuss
         {
             return await _context.FetusMeasurements.Where(f => f.FetusId == fetusId).ToListAsync();
 
+        }
+        public async Task<FetusMeasurement?> GetLatestBeforeWeekAsync(int fetusId, int currentWeek, int excludeMeasurementId)
+        {
+            return await _context.FetusMeasurements
+                .Where(m => m.FetusId == fetusId && m.Week < currentWeek && m.MeasurementId != excludeMeasurementId)
+                .OrderByDescending(m => m.Week)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<FetusMeasurement?> GetPreviousMeasurementAsync(int fetusId, int currentWeek)
+        {
+            return await _context.FetusMeasurements
+                .Where(m => m.FetusId == fetusId && m.Week < currentWeek)
+                .OrderByDescending(m => m.DateMeasured)
+                .FirstOrDefaultAsync();
         }
     }
 }

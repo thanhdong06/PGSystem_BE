@@ -16,10 +16,10 @@ namespace PGSystem_Repository.ThresholdRepository
         {
             _context = context;
         }
-        public async Task<Thresholds> GetThresholdByNameAsync(string MeasurementType)
+        public async Task<Thresholds> GetThresholdByNameAsync(string MeasurementType, int week)
         {
             return await _context.Thresholds
-                    .FirstOrDefaultAsync(t => t.MeasurementType.Equals(MeasurementType));
+                    .FirstOrDefaultAsync(t => t.MeasurementType == MeasurementType && t.Week == week);
         }
     }
 }

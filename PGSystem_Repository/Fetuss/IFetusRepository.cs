@@ -18,5 +18,8 @@ namespace PGSystem_Repository.Fetuss
         Task<FetusMeasurement> GetMeasurementByIdAsync(int measurementId);
         Task UpdateAsync(FetusMeasurement fetusMeasurement);
         Task<List<FetusMeasurement>> GetAllMeasurementByFetusId(int fetusId);
+        Task<Fetus> GetFetusWithPregnancyAsync(int fetusId);
+        Task<FetusMeasurement?> GetLatestBeforeWeekAsync(int fetusId, int currentWeek, int excludeMeasurementId);
+        Task<FetusMeasurement?> GetPreviousMeasurementAsync(int fetusId, int currentWeek);
     }
 }

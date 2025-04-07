@@ -13,7 +13,7 @@ namespace PGSystem_DataAccessLayer.Entities
         public int MeasurementId { get; set; }
 
         public DateOnly DateMeasured { get; set; }
-
+        public int Week {  get; set; }
         public double Length { get; set; }
         public double HeadCircumference { get; set; }
         public double WeightEstimate { get; set; }
